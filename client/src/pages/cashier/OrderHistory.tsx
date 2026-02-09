@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Printer, FileText, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Search, Printer } from 'lucide-react';
 import { orderService } from '@/services/order.service';
 
 export default function OrderHistory() {
