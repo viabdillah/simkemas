@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', sans-serif;
+  
+  /* Kita siapkan warna neon custom di sini nanti jika perlu, 
+     tapi untuk sekarang kita pakai default Tailwind v4 */
+}
+
+:root {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Background cerah dengan sedikit tint agar tidak membosankan */
+  background-color: #f8fafc; 
+  color: #0f172a;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ESNext"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
+  },
+  "scripts": {
+    "test": "vitest",
+    "dev": "wrangler dev --remote",  // Tambahkan --remote
+    "deploy": "wrangler deploy --minify"
+  },
+ "include": ["src", "worker-configuration.d.ts"],
+  "exclude": ["node_modules"]
+}
