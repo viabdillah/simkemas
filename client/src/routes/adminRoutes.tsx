@@ -3,6 +3,8 @@ import PackagingMaster from '@/pages/admin/PackagingMaster'; // Import baru
 import FinancePage from '@/pages/admin/FinancePage';
 import MaterialMaster from '@/pages/admin/MaterialMaster';
 import InventoryPage from '@/pages/admin/InventoryPage';
+import StockOpnamePage from '@/pages/admin/StockOpnamePage';
+import ReportFinansialPage from '@/pages/manager/ReportFinansialPage';
 
 export const adminRoutes = [
   {
@@ -26,11 +28,16 @@ export const adminRoutes = [
     element: <InventoryPage />,
     roles: ['admin', 'operator'] // Akses hanya Admin & Operator
   },
-  
+  { path: 'inventory/opname', element: <StockOpnamePage />, roles: ['admin', 'manajer', 'operator'] },
   // Route Master Data Bahan Baku
   {
     path: 'master/materials',
     element: <MaterialMaster />,
     roles: ['admin', 'operator'] // Akses hanya Admin & Operator
-  }
+  },
+  {
+    path: 'report-finansial',
+    element: <ReportFinansialPage />,
+    roles: ['admin', 'manajer']
+  },
 ];

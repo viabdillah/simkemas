@@ -6,5 +6,13 @@ export const inventoryService = {
   updateStock: async (data: { item_id: number, type: 'in' | 'out' | 'opname', quantity: number, note: string }) => {
     return await request('/api/inventory/update', { method: 'POST', body: JSON.stringify(data) });
   },
+  batchOpname: async (data: { items: { item_id: number, physical_stock: number }[], note: string }) => {
+    return await request('/api/inventory/opname/batch', {
+       method: 'POST', body: JSON.stringify(data)
+    });
+  },
+  undoOpname: async (logId: number) => {
+    return await request(`/api/inventory/opname/undo/${logId}`, { method: 'DELETE' });
+  },
   getLogs: async () => { return await request('/api/inventory/logs'); }
 };

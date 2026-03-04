@@ -35,6 +35,7 @@ app.route('/api/inventory', inventoryRoutes);
 app.route('/api/materials', materialRoutes);
 app.route('/api/pickup', pickupRoutes);
 
+
 // Root check
 app.get('/', (c) => c.text('SIMKEMAS Server is Running'));
 

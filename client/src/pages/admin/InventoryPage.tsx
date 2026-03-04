@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   History, RefreshCcw, Search, ClipboardList, Box, Loader2, 
-  ChevronRight, X, CheckCircle, ArrowRightLeft 
+  ChevronRight, X, CheckCircle, ArrowRightLeft, Undo 
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { inventoryService } from '@/services/inventory.service';
 
 export default function InventoryPage() {
+  const navigate = useNavigate();
+  
   const [activeTab, setActiveTab] = useState<'stocks' | 'mutation' | 'logs'>('stocks');
   const [stocks, setStocks] = useState<any[]>([]);
   const [logs, setLogs] = useState<any[]>([]);
@@ -17,7 +20,7 @@ export default function InventoryPage() {
   const [form, setForm] = useState({
     item_id: '',
     type: 'in', 
-    quantity: '', // Ganti ke string dulu biar enak saat hapus angka 0
+    quantity: '', 
     note: ''
   });
 
@@ -47,6 +50,7 @@ export default function InventoryPage() {
     fetchData(); 
   }, [fetchData]);
 
+  // FUNGSI SIMPAN MUTASI MANUAL
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const qty = Number(form.quantity);
@@ -66,13 +70,37 @@ export default function InventoryPage() {
          timer: 1500,
          showConfirmButton: false
       });
-      // Reset Form
       setForm({ item_id: '', type: 'in', quantity: '', note: '' });
       fetchData();
-    } catch { Swal.fire('Gagal', 'Error server', 'error'); }
+    } catch (e) { 
+      console.error(e);
+      Swal.fire('Gagal', 'Error server', 'error'); 
+    }
   };
 
-  // Filter untuk Tab STOK
+  // FUNGSI BATALKAN OPNAME (UNDO)
+  const handleUndoOpname = async (logId: number, itemName: string) => {
+    const confirm = await Swal.fire({
+        title: 'Batalkan Opname?',
+        html: `Anda akan membatalkan opname untuk <b>${itemName}</b> dan mengembalikan stok ke angka sebelumnya.<br/><br/><span class="text-red-500 text-xs">Peringatan: Lakukan ini hanya jika belum ada pemakaian bahan setelah opname tersebut!</span>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Batalkan',
+        confirmButtonColor: '#ef4444'
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+        Swal.fire({ title: 'Membatalkan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        await inventoryService.undoOpname(logId);
+        Swal.fire('Berhasil', 'Stok dikembalikan ke angka sebelumnya.', 'success');
+        fetchData(); // Refresh data untuk update tampilan log & stok
+    } catch (e: any) {
+        Swal.fire('Gagal', e.response?.data?.message || 'Gagal membatalkan opname. Pastikan Anda memiliki akses Admin.', 'error');
+    }
+  };
+
   const filteredStocks = useMemo(() => {
     return stocks.filter(s => 
         s.material_name.toLowerCase().includes(globalSearch.toLowerCase()) || 
@@ -80,7 +108,6 @@ export default function InventoryPage() {
     );
   }, [stocks, globalSearch]);
 
-  // Filter untuk Modal Pencarian (Form Mutasi)
   const searchResults = useMemo(() => {
     if (!searchQuery) return stocks;
     return stocks.filter(s => 
@@ -89,7 +116,6 @@ export default function InventoryPage() {
     );
   }, [stocks, searchQuery]);
 
-  // Helper untuk mendapatkan nama item yang dipilih
   const selectedItemLabel = useMemo(() => {
      if(!form.item_id) return null;
      const item = stocks.find(s => s.id === Number(form.item_id));
@@ -106,8 +132,16 @@ export default function InventoryPage() {
     <div className="space-y-4 pb-20">
       <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-slate-800">Gudang Bahan</h1>
-          {/* Tombol Refresh kecil */}
-          <button onClick={fetchData} className="p-2 bg-slate-100 rounded-full text-blue-600 active:scale-95"><RefreshCcw size={18}/></button>
+          <div className="flex gap-2">
+              {/* Tombol ke Halaman Opname Fokus */}
+              <button 
+                 onClick={() => navigate('/inventory/opname')} 
+                 className="px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl shadow-md active:scale-95 flex items-center gap-1"
+              >
+                 <CheckCircle size={14}/> Sesi Opname
+              </button>
+              <button onClick={fetchData} className="p-2 bg-slate-100 rounded-full text-blue-600 active:scale-95"><RefreshCcw size={18}/></button>
+          </div>
       </div>
       
       {/* Tabs Navigasi Mobile-Friendly */}
@@ -126,7 +160,6 @@ export default function InventoryPage() {
       {/* === CONTENT: STOK === */}
       {activeTab === 'stocks' && (
         <div className="space-y-3">
-           {/* Search Bar */}
            <div className="relative">
              <Search className="absolute left-3 top-3 text-slate-400" size={18}/>
              <input 
@@ -137,7 +170,6 @@ export default function InventoryPage() {
              />
            </div>
 
-           {/* List Card Stok (Lebih enak di mobile daripada Table) */}
            {loading ? <div className="py-10 text-center"><Loader2 className="animate-spin mx-auto text-blue-600"/></div> : 
             <div className="grid gap-3">
                 {filteredStocks.map((s, i) => (
@@ -159,7 +191,7 @@ export default function InventoryPage() {
         </div>
       )}
 
-      {/* === CONTENT: FORM MUTASI (MOBILE OPTIMIZED) === */}
+      {/* === CONTENT: FORM MUTASI (HANYA IN & OUT) === */}
       {activeTab === 'mutation' && (
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg">
            <h3 className="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
@@ -167,8 +199,6 @@ export default function InventoryPage() {
            </h3>
            
            <form onSubmit={handleSubmit} className="space-y-5">
-              
-              {/* 1. PEMILIHAN BARANG (SEARCHABLE MODAL TRIGGER) */}
               <div>
                  <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Bahan Baku</label>
                  <button 
@@ -184,26 +214,21 @@ export default function InventoryPage() {
                  </button>
               </div>
 
-              {/* 2. JENIS TRANSAKSI (BIG BUTTONS) */}
               <div>
                  <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Tipe Mutasi</label>
-                 <div className="grid grid-cols-3 gap-2">
+                 <div className="grid grid-cols-2 gap-2">
                     <button type="button" onClick={() => setForm({...form, type: 'in'})} className={`py-3 px-2 rounded-xl text-xs font-bold border transition-all ${form.type === 'in' ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-200' : 'bg-white border-slate-200 text-slate-500'}`}>
-                        Masuk
+                        Masuk (Restock)
                     </button>
                     <button type="button" onClick={() => setForm({...form, type: 'out'})} className={`py-3 px-2 rounded-xl text-xs font-bold border transition-all ${form.type === 'out' ? 'bg-red-600 text-white border-red-600 shadow-lg shadow-red-200' : 'bg-white border-slate-200 text-slate-500'}`}>
-                        Keluar
-                    </button>
-                    <button type="button" onClick={() => setForm({...form, type: 'opname'})} className={`py-3 px-2 rounded-xl text-xs font-bold border transition-all ${form.type === 'opname' ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200' : 'bg-white border-slate-200 text-slate-500'}`}>
-                        Opname
+                        Keluar (Pemakaian)
                     </button>
                  </div>
               </div>
 
-              {/* 3. INPUT JUMLAH */}
               <div>
                  <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">
-                    {form.type === 'opname' ? 'Stok Fisik (Real)' : 'Jumlah Mutasi'}
+                    Jumlah Mutasi
                  </label>
                  <input 
                     type="number" 
@@ -216,7 +241,6 @@ export default function InventoryPage() {
                  />
               </div>
 
-              {/* 4. CATATAN */}
               <div>
                  <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Keterangan</label>
                  <textarea 
@@ -234,24 +258,39 @@ export default function InventoryPage() {
         </div>
       )}
 
-      {/* === CONTENT: LOGS === */}
+      {/* === CONTENT: LOGS DENGAN TOMBOL UNDO === */}
       {activeTab === 'logs' && (
          <div className="space-y-3">
-             {loading ? <Loader2 className="animate-spin mx-auto"/> : logs.map((l, i) => (
-                 <div key={i} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-sm">
-                    <div className="flex justify-between items-start mb-2">
+             {loading ? <div className="py-10 flex justify-center"><Loader2 className="animate-spin text-slate-400"/></div> : logs.map((l, i) => (
+                 <div key={i} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-sm relative">
+                    
+                    {/* TOMBOL UNDO (Hanya muncul jika tipe 'opname') */}
+                    {l.type === 'opname' && (
+                        <button 
+                           onClick={() => handleUndoOpname(l.id, l.material_name)} 
+                           className="absolute top-3 right-3 p-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 flex items-center gap-1 text-[10px] font-bold transition-all active:scale-95"
+                           title="Batalkan Opname Ini"
+                        >
+                            <Undo size={12}/> BATAL (UNDO)
+                        </button>
+                    )}
+
+                    <div className="flex justify-between items-start mb-2 pr-24">
                         <div>
                             <span className="font-bold text-slate-800 block">{l.material_name}</span>
                             <span className="text-xs text-slate-500">{l.item_name}</span>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs font-bold ${l.type === 'in' ? 'bg-green-100 text-green-700' : l.type === 'out' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
-                            {l.type === 'in' ? 'Masuk' : l.type === 'out' ? 'Keluar' : 'Opname'}
-                        </span>
                     </div>
+                    
                     <div className="flex justify-between items-center border-t border-slate-50 pt-2 mt-2">
-                        <span className={`text-lg font-bold ${l.quantity > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                            {l.quantity > 0 ? '+' : ''}{l.quantity}
-                        </span>
+                        <div>
+                            <span className={`px-2 py-1 rounded text-[10px] font-bold mr-2 inline-block ${l.type === 'in' ? 'bg-green-100 text-green-700' : l.type === 'out' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
+                                {l.type === 'in' ? 'Masuk' : l.type === 'out' ? 'Keluar' : 'Opname'}
+                            </span>
+                            <span className={`text-lg font-bold ${l.quantity > 0 ? 'text-green-600' : l.quantity < 0 ? 'text-red-500' : 'text-slate-600'}`}>
+                                {l.quantity > 0 ? '+' : ''}{l.quantity}
+                            </span>
+                        </div>
                         <div className="text-right">
                              <span className="text-[10px] text-slate-400 block">{new Date(l.created_at).toLocaleDateString()}</span>
                              <span className="text-xs text-slate-500 italic truncate max-w-37.5 block">{l.note}</span>
@@ -262,10 +301,9 @@ export default function InventoryPage() {
          </div>
       )}
 
-      {/* === MODAL PENCARIAN (FULLSCREEN ON MOBILE) === */}
+      {/* === MODAL PENCARIAN BAHAN BAKU === */}
       {showSearchModal && (
           <div className="fixed inset-0 z-50 bg-white flex flex-col animate-in slide-in-from-bottom duration-200">
-              {/* Header Modal */}
               <div className="p-4 border-b border-slate-100 flex gap-3 items-center bg-white shadow-sm shrink-0">
                   <div className="relative flex-1">
                       <Search className="absolute left-3 top-3 text-slate-400" size={18}/>
@@ -282,7 +320,6 @@ export default function InventoryPage() {
                   </button>
               </div>
 
-              {/* List Hasil Pencarian */}
               <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50">
                   {searchResults.length === 0 ? (
                       <div className="text-center py-10 text-slate-400">
@@ -293,8 +330,8 @@ export default function InventoryPage() {
                           <button 
                             key={s.id}
                             onClick={() => {
-                                setForm({...form, item_id: String(s.id)}); // Set ID
-                                setShowSearchModal(false); // Tutup Modal
+                                setForm({...form, item_id: String(s.id)});
+                                setShowSearchModal(false);
                             }}
                             className="w-full bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center hover:border-blue-500 active:bg-blue-50 text-left group"
                           >
@@ -313,7 +350,6 @@ export default function InventoryPage() {
               </div>
           </div>
       )}
-
     </div>
   );
 }
