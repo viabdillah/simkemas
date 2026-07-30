@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8788', // Port lokal backend (Cloudflare Pages)
+        target: 'https://e8dee652.simkemas-api.pages.dev/', // Port lokal backend (Cloudflare Pages)
         changeOrigin: true,
       }
     }

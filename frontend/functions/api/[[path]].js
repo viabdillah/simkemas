@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   const url = new URL(context.request.url);
-  const backendUrl = new URL("https://966321d7.simkemas-api.pages.dev" + url.pathname + url.search);
+  const backendUrl = new URL("https://e8dee652.simkemas-api.pages.dev/" + url.pathname + url.search);
   const newRequest = new Request(backendUrl.toString(), context.request);
   
   try {

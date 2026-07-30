@@ -7,14 +7,14 @@
 		{
 			"binding": "DB",
 			"database_name": "simkemas-db",
-			"database_id": "d011ed31-8432-4999-b418-61773bb3551a",
+			"database_id": "3c65fe7e-0f5d-429c-81f7-a72c2e7b35d1",
 			"remote": true
 		}
 	],
 	"kv_namespaces": [
 		{
 			"binding": "SIMKEMAS_RATE_LIMIT",
-			"id": "5eac675737fb443b8e60bff916a4b8e0",
+			"id": "6f3b8154480e45a28f3653d66a96b509",
 			"remote": true
 		}
 	]
