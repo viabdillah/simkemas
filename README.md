@@ -1,64 +1,64 @@
-<div align="center">
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=280&color=0:0F172A,50:2563EB,100:14B8A6&text=SIMKEMAS&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow&descAlignY=60"/>
+# ![Header](https://capsule-render.vercel.app/api?type=waving\&height=280\&color=0:0F172A,50:2563EB,100:14B8A6\&text=SIMKEMAS\&fontSize=60\&fontColor=ffffff\&animation=fadeIn\&fontAlignY=38\&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow\&descAlignY=60)
 
 # 🚀 SIMKEMAS
 
-### Enterprise Resource Planning (ERP) & Point of Sales untuk Pusat Layanan Kemasan UMKM
+> **Enterprise Resource Planning (ERP)** & **Point of Sales (POS)** untuk **Pusat Layanan Kemasan UMKM**
 
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite)
-![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare)
-![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss)
+<p align="center">
+
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge\&logo=react)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge\&logo=vite)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge\&logo=cloudflare)
+![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=for-the-badge\&logo=tailwindcss)
 ![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
----
-
-# ✨ Tentang SIMKEMAS
-
-SIMKEMAS adalah platform **Enterprise Resource Planning (ERP)** sekaligus **Point of Sales (POS)** yang dirancang khusus untuk **Pusat Layanan Kemasan UMKM**.
-
-Sistem ini mengintegrasikan seluruh proses bisnis mulai dari **pemesanan pelanggan**, **workflow produksi lintas divisi**, **manajemen keuangan**, hingga **dashboard analitik** dalam satu platform berbasis cloud.
-
-## 🎯 Keunggulan
-
-- 🚀 ERP & POS dalam satu aplikasi
-- 🏭 Workflow Produksi Multi Divisi
-- 📊 Dashboard Analitik Real-time
-- 💰 Manajemen Keuangan
-- 📦 Manajemen Pesanan
-- 👥 Customer Management
-- 🔐 Role Based Access Control (RBAC)
-- ☁️ Cloudflare Serverless Architecture
+</p>
 
 ---
 
-# 🖥️ Preview
+## ✨ Tentang SIMKEMAS
 
-> Coming Soon.
+SIMKEMAS merupakan platform **Enterprise Resource Planning (ERP)** dan **Point of Sales (POS)** yang dirancang khusus untuk **Pusat Layanan Kemasan UMKM**.
 
----
+Platform ini mengintegrasikan seluruh proses bisnis dalam satu sistem, mulai dari **pemesanan pelanggan**, **workflow produksi lintas divisi**, **manajemen keuangan**, hingga **dashboard analitik** secara real-time.
 
-# 📦 Modul Utama
+### 🎯 Fitur Unggulan
 
-## 🛒 Point of Sales
-
-- Pembuatan SPK
-- Data Pelanggan
-- Data Produk Kemasan
-- Pembayaran DP
-- Pelunasan
-- Cicilan
-- Cetak Invoice
-- Riwayat Transaksi
+* 🚀 ERP & POS dalam satu platform
+* 🏭 Workflow Produksi Multi Divisi
+* 📦 Manajemen Pesanan (SPK)
+* 👥 Customer Management
+* 💰 Manajemen Keuangan
+* 📊 Dashboard Analitik Real-time
+* 🔐 Role Based Access Control (RBAC)
+* ☁️ Cloudflare Serverless Architecture
 
 ---
 
-## 🎨 Workflow Produksi
+## 🖥️ Preview
+
+> 🚧 Coming Soon.
+
+---
+
+## 📦 Modul Utama
+
+### 🛒 Point of Sales (POS)
+
+* Pembuatan SPK
+* Data Pelanggan
+* Data Produk Kemasan
+* Pembayaran DP
+* Pelunasan
+* Cicilan
+* Cetak Invoice
+* Riwayat Transaksi
+
+### 🎨 Workflow Produksi
 
 Menggunakan konsep **Kanban Workflow**.
 
-```
+```text
 POS
  │
  ▼
@@ -74,59 +74,60 @@ Packaging
 Ready Pickup
 ```
 
-### Divisi
+#### 🎨 Divisi Desain
 
-🎨 Desain
-- Drag & Drop
-- Approval
-- Upload File
+* Drag & Drop Workflow
+* Approval Desain
+* Upload File
 
-🖨️ Produksi
-- Monitoring Produksi
-- Validasi Material
-- Status Mesin
+#### 🖨️ Divisi Produksi
 
-📦 Packaging
-- Quality Control
-- Packing
-- Ready Pickup
+* Monitoring Produksi
+* Validasi Material
+* Status Mesin
 
----
+#### 📦 Divisi Packaging
 
-# 📊 Dashboard
-
-Dashboard menyediakan informasi bisnis secara real-time.
-
-- 📈 Omzet
-- 📦 SPK Aktif
-- 👥 Data Pelanggan
-- 💰 Cashflow
-- ⭐ Produk Terlaris
-- 📄 Export CSV
+* Quality Control
+* Packing
+* Ready Pickup
 
 ---
 
-# 🔒 Keamanan
+## 📊 Dashboard
 
-| Fitur                     | Status |
-| ------------------------- | ------ |
-| Role Based Access Control | ✅      |
-| Audit Log                 | ✅      |
-| Permission Management     | ✅      |
-| Secure Authentication     | ✅      |
+Dashboard menyediakan informasi bisnis secara real-time, meliputi:
+
+* 📈 Omzet
+* 📦 SPK Aktif
+* 👥 Data Pelanggan
+* 💰 Cashflow
+* ⭐ Produk Terlaris
+* 📄 Export CSV
 
 ---
 
-# 🏗️ Arsitektur Sistem
+## 🔒 Keamanan
 
-```
+| Fitur                            | Status |
+| -------------------------------- | :----: |
+| Role Based Access Control (RBAC) |    ✅   |
+| Audit Log                        |    ✅   |
+| Permission Management            |    ✅   |
+| Secure Authentication            |    ✅   |
+
+---
+
+## 🏗️ Arsitektur Sistem
+
+```mermaid
 flowchart LR
 
 Client["🌐 React Frontend"]
 API["⚡ Cloudflare Pages Functions"]
 DB[("🗄️ Cloudflare D1")]
 R2["📁 Cloudflare R2"]
-KV["⚡ KV Cache"]
+KV["⚡ Cloudflare KV"]
 
 Client --> API
 API --> DB
@@ -136,9 +137,9 @@ API --> KV
 
 ---
 
-# 🔄 Workflow Produksi
+## 🔄 Workflow Produksi
 
-```
+```mermaid
 flowchart LR
 
 A["🛒 POS"]
@@ -167,138 +168,152 @@ style G fill:#16A34A,color:#fff
 
 ---
 
-# ⚙️ Tech Stack
+## ⚙️ Tech Stack
 
-| Layer        | Technology                  |
-| ------------ | ---------------------------- |
-| Frontend     | React 19                     |
-| Build Tool   | Vite 7                       |
-| Styling      | Tailwind CSS v4               |
-| Backend      | Cloudflare Pages Functions    |
-| Database     | Cloudflare D1                 |
-| Storage      | Cloudflare R2                 |
-| Cache        | Cloudflare KV                  |
-| Icons        | Lucide React                   |
-| Workflow     | Hello Pangea DnD                |
-| Architecture | Monorepo (npm workspaces)        |
+| Layer          | Teknologi                  |
+| -------------- | -------------------------- |
+| Frontend       | React 19                   |
+| Build Tool     | Vite 7                     |
+| Styling        | Tailwind CSS v4            |
+| Backend        | Cloudflare Pages Functions |
+| Database       | Cloudflare D1              |
+| Object Storage | Cloudflare R2              |
+| Cache          | Cloudflare KV              |
+| Icons          | Lucide React               |
+| Drag & Drop    | Hello Pangea DnD           |
+| Architecture   | Monorepo (npm Workspaces)  |
 
 ---
 
-# 📁 Struktur Project
+## 📁 Struktur Project
 
-```
+```text
 📦 SIMKEMAS
 │
-├── 🌐 frontend              # React 19 + Vite + Tailwind CSS (punya package.json sendiri)
+├── 🌐 frontend
+│   └── React 19 + Vite + Tailwind CSS
 │
-├── ⚡ backend               # Cloudflare Pages Functions (API)
+├── ⚡ backend
 │   └── functions
-│       ├── _lib             # Helper (crypto, jwt, audit, dll)
-│       └── api              # Endpoint API
+│       ├── _lib
+│       └── api
 │
-├── 🔗 shared/src            # Tipe & util yang dipakai bersama FE-BE
+├── 🔗 shared
+│   └── src
 │
-├── 📄 package.json          # Root workspace config
-├── 📄 .gitignore
+├── 📄 package.json
 ├── 📄 README.md
-└── 📄 LICENSE
+├── 📄 LICENSE
+└── 📄 .gitignore
 ```
 
-> ℹ️ **Catatan:** `backend` tidak termasuk dalam npm workspace karena tidak memiliki dependency Node — murni Cloudflare Pages Functions yang dijalankan langsung oleh `wrangler`.
+> **Catatan**
+>
+> Folder `backend` tidak termasuk dalam **npm workspace** karena tidak memiliki dependency Node.js. Seluruh fungsi dijalankan langsung menggunakan **Cloudflare Pages Functions** melalui `wrangler`.
 
 ---
 
-# 🚀 Quick Start
+## 🚀 Quick Start
 
-## Clone Repository
+### Clone Repository
 
-```
+```bash
 git clone https://github.com/viabdillah/simkemas.git
 cd simkemas
 ```
 
-## Install dependency (root + frontend workspace)
+### Install Dependency
 
-```
+```bash
 npm install
 ```
 
-## Jalankan development server
+### Menjalankan Development Server
 
-Butuh 2 terminal terpisah:
+Jalankan dua terminal secara bersamaan.
 
-**Terminal 1 — Frontend (Vite)**
-```
+#### Terminal 1 — Frontend
+
+```bash
 cd frontend
 npm run dev
 ```
-→ http://localhost:5173
 
-**Terminal 2 — Backend (Cloudflare Pages Functions)**
+Frontend tersedia di:
+
+```text
+http://localhost:5173
 ```
+
+#### Terminal 2 — Backend
+
+```bash
 cd backend
 wrangler pages dev functions --port 8788
 ```
-→ http://localhost:8788
 
-> 💡 Frontend memanggil API backend melalui proxy yang dikonfigurasi di `vite.config.js` (`/api` → backend lokal atau URL backend production, tergantung environment).
+Backend tersedia di:
+
+```text
+http://localhost:8788
+```
+
+> 💡 Frontend mengakses backend melalui proxy yang dikonfigurasi pada `vite.config.js`, sehingga request ke `/api` akan diteruskan ke backend lokal maupun production sesuai environment.
 
 ---
 
-# 📈 Roadmap
+## 📈 Roadmap
 
 | Status | Modul                 |
-| ------ | --------------------- |
-| ✅      | Point of Sales        |
-| ✅      | Workflow Produksi     |
-| ✅      | Dashboard             |
-| ✅      | Keuangan              |
-| ✅      | Export CSV            |
-| 🚧      | WhatsApp Notification |
-| 🚧      | Dashboard Mobile      |
-| 🚧      | QR Code               |
-| 🚧      | Multi Cabang          |
-| 🚧      | Backup Cloud          |
-| 🚧      | AI Analytics          |
+| :----: | --------------------- |
+|    ✅   | Point of Sales        |
+|    ✅   | Workflow Produksi     |
+|    ✅   | Dashboard             |
+|    ✅   | Manajemen Keuangan    |
+|    ✅   | Export CSV            |
+|   🚧   | WhatsApp Notification |
+|   🚧   | Dashboard Mobile      |
+|   🚧   | QR Code               |
+|   🚧   | Multi Cabang          |
+|   🚧   | Cloud Backup          |
+|   🚧   | AI Analytics          |
 
 ---
 
-# 🤝 Kontribusi
+## 🤝 Kontribusi
 
 Kontribusi sangat terbuka.
 
-```
+```text
 Fork
-   │
-   ▼
+ │
+ ▼
 Create Branch
-   │
-   ▼
+ │
+ ▼
 Commit Changes
-   │
-   ▼
+ │
+ ▼
 Push Branch
-   │
-   ▼
+ │
+ ▼
 Pull Request
 ```
 
 ---
 
-# 📜 Lisensi
+## 📜 Lisensi
 
-Project ini menggunakan lisensi **MIT License**.
+Project ini menggunakan **MIT License**.
 
 ---
 
-### ⭐ SIMKEMAS
+## ⭐ SIMKEMAS
 
-ERP • POS • Workflow Produksi • Dashboard Analytics
+**ERP • POS • Workflow Produksi • Dashboard Analytics**
 
 Dibangun menggunakan **React**, **Cloudflare Workers**, dan **Tailwind CSS**.
 
 **© 2026 Divi Abdillah Almasrur**
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=180&section=footer&color=0:0F172A,50:2563EB,100:14B8A6"/>
-
-</div>
+![Footer](https://capsule-render.vercel.app/api?type=waving\&height=180\&color=0:0F172A,50:2563EB,100:14B8A6\&section=footer)
