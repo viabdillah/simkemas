@@ -1,4 +1,6 @@
-![Header](https://capsule-render.vercel.app/api?type=waving&height=280&color=0:0F172A,50:2563EB,100:14B8A6&text=SIMKEMAS&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow&descAlignY=60)
+<div align="center">
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=280&color=0:0F172A,50:2563EB,100:14B8A6&text=SIMKEMAS&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow&descAlignY=60"/>
 
 # 🚀 SIMKEMAS
 
@@ -117,7 +119,7 @@ Dashboard menyediakan informasi bisnis secara real-time.
 
 # 🏗️ Arsitektur Sistem
 
-```mermaid
+```
 flowchart LR
 
 Client["🌐 React Frontend"]
@@ -136,7 +138,7 @@ API --> KV
 
 # 🔄 Workflow Produksi
 
-```mermaid
+```
 flowchart LR
 
 A["🛒 POS"]
@@ -297,4 +299,6 @@ Dibangun menggunakan **React**, **Cloudflare Workers**, dan **Tailwind CSS**.
 
 **© 2026 Divi Abdillah Almasrur**
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&height=180&color=0:0F172A,50:2563EB,100:14B8A6&section=footer)
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=180&section=footer&color=0:0F172A,50:2563EB,100:14B8A6"/>
+
+</div>
