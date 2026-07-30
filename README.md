@@ -4,8 +4,6 @@
 
 > **Enterprise Resource Planning (ERP)** & **Point of Sales (POS)** untuk **Pusat Layanan Kemasan UMKM**
 
-```md
-
 <p align="center">
 
 ![Build](https://img.shields.io/github/actions/workflow/status/viabdillah/simkemas/ci.yml?branch=main&style=for-the-badge&logo=githubactions&label=Build)
@@ -18,23 +16,26 @@
 ![License](https://img.shields.io/github/license/viabdillah/simkemas?style=for-the-badge)
 
 </p>
-```
 
 ---
 
-## Tentang SIMKEMAS
-## Preview
-## Modul Utama
-## Dashboard
-## Keamanan
-## Arsitektur Sistem
-## Workflow Produksi
-## Tech Stack
-## Struktur Project
-## Quick Start
-## Roadmap
-## Kontribusi
-## Lisensi
+## 📚 Daftar Isi
+
+- [✨ Tentang](#-tentang-simkemas)
+- [🖥️ Preview](#️-preview)
+- [📦 Modul Utama](#-modul-utama)
+- [📊 Dashboard](#-dashboard)
+- [🔒 Keamanan](#-keamanan)
+- [🏗️ Arsitektur Sistem](#️-system-architecture)
+- [🔄 Workflow Produksi](#-workflow-produksi)
+- [⚙️ Tech Stack](#️-tech-stack)
+- [📁 Struktur Project](#-struktur-project)
+- [🔌 REST API](#-rest-api)
+- [⚙️ Environment Variables](#️-environment-variables)
+- [🚀 Deployment](#-deployment)
+- [📈 Roadmap](#-roadmap)
+- [🤝 Kontribusi](#-kontribusi)
+- [📜 Lisensi](#-lisensi)
 
 ---
 
@@ -59,7 +60,11 @@ Platform ini mengintegrasikan seluruh proses bisnis dalam satu sistem, mulai dar
 
 ## 🖥️ Preview
 
-> 🚧 Coming Soon.
+<p align="center">
+
+<img src="docs/dashboard.png" width="900"/>
+
+</p>
 
 ---
 
@@ -140,7 +145,6 @@ Dashboard menyediakan informasi bisnis secara real-time, meliputi:
 
 ---
 
-````md
 ## 🏗️ System Architecture
 
 ```mermaid
@@ -189,11 +193,8 @@ style CLIENT fill:#E0F2FE,stroke:#0284C7
 style EDGE fill:#FEF3C7,stroke:#F59E0B
 style DATA fill:#DCFCE7,stroke:#16A34A
 style SHARED fill:#F3E8FF,stroke:#8B5CF6
+
 ```
-````
-
-
----
 
 ## 🔄 Workflow Produksi
 
@@ -263,116 +264,13 @@ style G fill:#16A34A,color:#fff
 ├── 📄 README.md
 ├── 📄 LICENSE
 └── 📄 .gitignore
+
 ```
 
 > **Catatan**
 >
 > Folder `backend` tidak termasuk dalam **npm workspace** karena tidak memiliki dependency Node.js. Seluruh fungsi dijalankan langsung menggunakan **Cloudflare Pages Functions** melalui `wrangler`.
 
----
-
-## ✨ Features
-
-### 🛒 Point of Sales
-
-* Pembuatan SPK
-* Manajemen Pelanggan
-* Manajemen Produk Kemasan
-* Pembayaran DP
-* Pelunasan & Cicilan
-* Cetak Invoice
-* Riwayat Transaksi
-
-### 🏭 Production Workflow
-
-* Kanban Workflow
-* Drag & Drop
-* Assignment Antar Divisi
-* Approval Desain
-* Upload File Produksi
-* Quality Control
-* Status Produksi Real-time
-
-### 💰 Finance
-
-* Cashflow
-* Pembayaran DP
-* Pelunasan
-* Riwayat Pembayaran
-* Laporan Keuangan
-
-### 📊 Dashboard & Analytics
-
-* Dashboard Real-time
-* Omzet
-* Produk Terlaris
-* SPK Aktif
-* Statistik Pelanggan
-* Export CSV
-
-### 🔐 Security
-
-* Role Based Access Control (RBAC)
-* Permission Management
-* JWT Authentication
-* Audit Log
-* Secure API
-
-```
-
-## 🔌 REST API
-
-Seluruh endpoint menggunakan prefix:
-
-```text id="xj62lr"
-/api
-```
-
-### Authentication
-
-| Method | Endpoint       | Deskripsi          |
-| ------ | -------------- | ------------------ |
-| POST   | `/auth/login`  | Login pengguna     |
-| POST   | `/auth/logout` | Logout             |
-| GET    | `/auth/me`     | Informasi pengguna |
-
-### Customers
-
-| Method | Endpoint         |
-| ------ | ---------------- |
-| GET    | `/customers`     |
-| POST   | `/customers`     |
-| PUT    | `/customers/:id` |
-| DELETE | `/customers/:id` |
-
-### Orders (SPK)
-
-| Method | Endpoint      |
-| ------ | ------------- |
-| GET    | `/orders`     |
-| POST   | `/orders`     |
-| GET    | `/orders/:id` |
-| PUT    | `/orders/:id` |
-
-### Production
-
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| GET    | `/production`            |
-| PUT    | `/production/:id/status` |
-
-### Finance
-
-| Method | Endpoint    |
-| ------ | ----------- |
-| GET    | `/payments` |
-| POST   | `/payments` |
-| GET    | `/cashflow` |
-
-> Seluruh endpoint mengembalikan response dalam format JSON.
-
-```
-
 ## ⚙️ Environment Variables
 
 ### Frontend (`frontend/.env`)
@@ -399,135 +297,26 @@ KV_NAMESPACE=simkemas-cache
 >
 > Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
 
+## 🚀 Quick Start
+
+```bash
+git clone https://github.com/viabdillah/simkemas.git
+
+cd simkemas
+
+npm install
+
+npm run dev
 ```
 
-## ⚙️ Environment Variables
+## ✨ Highlights
 
-### Frontend (`frontend/.env`)
-
-```env id="56udul"
-VITE_API_URL=http://localhost:8788
-```
-
-### Backend (`backend/.dev.vars`)
-
-```env id="31dvj5"
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=7d
-
-DB_NAME=simkemas
-
-R2_BUCKET=simkemas-files
-
-KV_NAMESPACE=simkemas-cache
-```
-
-> Jangan pernah meng-commit file `.env` maupun `.dev.vars` ke repository.
->
-> Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
-```
-## 🚀 Deployment
-
-### Frontend
-
-Deploy menggunakan **Cloudflare Pages**.
-
-```bash id="q5nvh0"
-npm run build
-```
-
-Output build:
-
-```text id="u3zzx8"
-frontend/dist
-```
-
----
-
-### Backend
-
-Deploy menggunakan **Wrangler**.
-
-```bash id="fgd9o3"
-cd backend
-wrangler deploy
-```
-
----
-
-### Database
-
-Membuat database Cloudflare D1:
-
-```bash id="cwmys8"
-wrangler d1 create simkemas
-```
-
-Migrasi database:
-
-```bash id="c0n6wn"
-wrangler d1 migrations apply simkemas
-```
-
----
-
-### Storage
-
-Membuat bucket Cloudflare R2:
-
-```bash id="3y5e6e"
-wrangler r2 bucket create simkemas-files
-```
-
----
-
-### Cache
-
-Membuat namespace KV:
-
-```bash id="d3jrd5"
-wrangler kv namespace create CACHE
-```
-
----
-
-### Production Architecture
-
-```text id="dawpz9"
-Browser
-    │
-    ▼
-Cloudflare Pages
-    │
-    ▼
-Pages Functions
-    │
- ┌──┴───────────┐
- ▼              ▼
-Cloudflare D1  Cloudflare R2
-       │
-       ▼
-Cloudflare KV
-```
-
-
-## 📈 Roadmap
-
-| Status | Modul                 |
-| :----: | --------------------- |
-|    ✅   | Point of Sales        |
-|    ✅   | Workflow Produksi     |
-|    ✅   | Dashboard             |
-|    ✅   | Manajemen Keuangan    |
-|    ✅   | Export CSV            |
-|   🚧   | WhatsApp Notification |
-|   🚧   | Dashboard Mobile      |
-|   🚧   | QR Code               |
-|   🚧   | Multi Cabang          |
-|   🚧   | Cloud Backup          |
-|   🚧   | AI Analytics          |
-
----
+- 🚀 ERP + POS dalam satu platform
+- 🏭 Workflow Produksi berbasis Kanban
+- 📦 Manajemen SPK
+- 📊 Dashboard Real-time
+- 🔐 RBAC & Audit Log
+- ☁️ Cloudflare Native Architecture
 
 ## 🤝 Kontribusi
 
@@ -556,7 +345,7 @@ Pull Request
 Project ini menggunakan **MIT License**.
 
 ---
-
+<p align="center">
 ## ⭐ SIMKEMAS
 
 **ERP • POS • Workflow Produksi • Dashboard Analytics**
@@ -564,5 +353,6 @@ Project ini menggunakan **MIT License**.
 Dibangun menggunakan **React**, **Cloudflare Workers**, dan **Tailwind CSS**.
 
 **© 2026 Divi Abdillah Almasrur**
+</p>
 
 ![Footer](https://capsule-render.vercel.app/api?type=waving\&height=180\&color=0:0F172A,50:2563EB,100:14B8A6\&section=footer)
