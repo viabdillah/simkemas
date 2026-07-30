@@ -4,15 +4,36 @@
 
 > **Enterprise Resource Planning (ERP)** & **Point of Sales (POS)** untuk **Pusat Layanan Kemasan UMKM**
 
+```md
 <p align="center">
 
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge\&logo=react)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge\&logo=vite)
-![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge\&logo=cloudflare)
-![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=for-the-badge\&logo=tailwindcss)
-![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
+![Build](https://img.shields.io/github/actions/workflow/status/viabdillah/simkemas/ci.yml?branch=main&style=for-the-badge&logo=githubactions&label=Build)
+![Version](https://img.shields.io/github/v/release/viabdillah/simkemas?style=for-the-badge&label=Version)
+![Release](https://img.shields.io/github/release-date/viabdillah/simkemas?style=for-the-badge&label=Release)
+![Last Commit](https://img.shields.io/github/last-commit/viabdillah/simkemas?style=for-the-badge&label=Last%20Commit)
+![Stars](https://img.shields.io/github/stars/viabdillah/simkemas?style=for-the-badge&logo=github)
+![Forks](https://img.shields.io/github/forks/viabdillah/simkemas?style=for-the-badge&logo=github)
+![Issues](https://img.shields.io/github/issues/viabdillah/simkemas?style=for-the-badge)
+![License](https://img.shields.io/github/license/viabdillah/simkemas?style=for-the-badge)
 
 </p>
+```
+
+---
+
+## Tentang SIMKEMAS
+## Preview
+## Modul Utama
+## Dashboard
+## Keamanan
+## Arsitektur Sistem
+## Workflow Produksi
+## Tech Stack
+## Struktur Project
+## Quick Start
+## Roadmap
+## Kontribusi
+## Lisensi
 
 ---
 
@@ -118,22 +139,58 @@ Dashboard menyediakan informasi bisnis secara real-time, meliputi:
 
 ---
 
-## 🏗️ Arsitektur Sistem
+````md
+## 🏗️ System Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
 
-Client["🌐 React Frontend"]
-API["⚡ Cloudflare Pages Functions"]
-DB[("🗄️ Cloudflare D1")]
-R2["📁 Cloudflare R2"]
-KV["⚡ Cloudflare KV"]
+%% ===== Client Layer =====
+subgraph CLIENT["🖥️ Client Layer"]
+    WEB["🌐 Web Application<br/>React 19 + Vite"]
+end
 
-Client --> API
-API --> DB
+%% ===== Edge Layer =====
+subgraph EDGE["☁️ Cloudflare Edge"]
+    API["⚡ Pages Functions"]
+    AUTH["🔐 Authentication"]
+    CACHE["⚡ KV Cache"]
+end
+
+%% ===== Data Layer =====
+subgraph DATA["🗄️ Data Layer"]
+    D1[("Cloudflare D1")]
+    R2["📁 Cloudflare R2"]
+end
+
+%% ===== Shared Layer =====
+subgraph SHARED["📦 Shared Package"]
+    TYPES["Types"]
+    UTILS["Utilities"]
+end
+
+%% ===== Flow =====
+WEB --> API
+
+API --> AUTH
+API --> D1
 API --> R2
-API --> KV
+API --> CACHE
+
+API -. uses .-> TYPES
+API -. uses .-> UTILS
+
+WEB -. uses .-> TYPES
+WEB -. uses .-> UTILS
+
+%% ===== Style =====
+style CLIENT fill:#E0F2FE,stroke:#0284C7
+style EDGE fill:#FEF3C7,stroke:#F59E0B
+style DATA fill:#DCFCE7,stroke:#16A34A
+style SHARED fill:#F3E8FF,stroke:#8B5CF6
 ```
+````
+
 
 ---
 
@@ -213,54 +270,245 @@ style G fill:#16A34A,color:#fff
 
 ---
 
-## 🚀 Quick Start
+## ✨ Features
 
-### Clone Repository
+### 🛒 Point of Sales
 
-```bash
-git clone https://github.com/viabdillah/simkemas.git
-cd simkemas
+* Pembuatan SPK
+* Manajemen Pelanggan
+* Manajemen Produk Kemasan
+* Pembayaran DP
+* Pelunasan & Cicilan
+* Cetak Invoice
+* Riwayat Transaksi
+
+### 🏭 Production Workflow
+
+* Kanban Workflow
+* Drag & Drop
+* Assignment Antar Divisi
+* Approval Desain
+* Upload File Produksi
+* Quality Control
+* Status Produksi Real-time
+
+### 💰 Finance
+
+* Cashflow
+* Pembayaran DP
+* Pelunasan
+* Riwayat Pembayaran
+* Laporan Keuangan
+
+### 📊 Dashboard & Analytics
+
+* Dashboard Real-time
+* Omzet
+* Produk Terlaris
+* SPK Aktif
+* Statistik Pelanggan
+* Export CSV
+
+### 🔐 Security
+
+* Role Based Access Control (RBAC)
+* Permission Management
+* JWT Authentication
+* Audit Log
+* Secure API
+
 ```
 
-### Install Dependency
+## 🔌 REST API
 
-```bash
-npm install
+Seluruh endpoint menggunakan prefix:
+
+```text id="xj62lr"
+/api
 ```
 
-### Menjalankan Development Server
+### Authentication
 
-Jalankan dua terminal secara bersamaan.
+| Method | Endpoint       | Deskripsi          |
+| ------ | -------------- | ------------------ |
+| POST   | `/auth/login`  | Login pengguna     |
+| POST   | `/auth/logout` | Logout             |
+| GET    | `/auth/me`     | Informasi pengguna |
 
-#### Terminal 1 — Frontend
+### Customers
 
-```bash
-cd frontend
-npm run dev
+| Method | Endpoint         |
+| ------ | ---------------- |
+| GET    | `/customers`     |
+| POST   | `/customers`     |
+| PUT    | `/customers/:id` |
+| DELETE | `/customers/:id` |
+
+### Orders (SPK)
+
+| Method | Endpoint      |
+| ------ | ------------- |
+| GET    | `/orders`     |
+| POST   | `/orders`     |
+| GET    | `/orders/:id` |
+| PUT    | `/orders/:id` |
+
+### Production
+
+| Method | Endpoint                 |
+| ------ | ------------------------ |
+| GET    | `/production`            |
+| PUT    | `/production/:id/status` |
+
+### Finance
+
+| Method | Endpoint    |
+| ------ | ----------- |
+| GET    | `/payments` |
+| POST   | `/payments` |
+| GET    | `/cashflow` |
+
+> Seluruh endpoint mengembalikan response dalam format JSON.
+
 ```
 
-Frontend tersedia di:
+## ⚙️ Environment Variables
 
-```text
-http://localhost:5173
+### Frontend (`frontend/.env`)
+
+```env id="56udul"
+VITE_API_URL=http://localhost:8788
 ```
 
-#### Terminal 2 — Backend
+### Backend (`backend/.dev.vars`)
 
-```bash
-cd backend
-wrangler pages dev functions --port 8788
+```env id="31dvj5"
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+
+DB_NAME=simkemas
+
+R2_BUCKET=simkemas-files
+
+KV_NAMESPACE=simkemas-cache
+
 ```
 
-Backend tersedia di:
+> Jangan pernah meng-commit file `.env` maupun `.dev.vars` ke repository.
+>
+> Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
 
-```text
-http://localhost:8788
 ```
 
-> 💡 Frontend mengakses backend melalui proxy yang dikonfigurasi pada `vite.config.js`, sehingga request ke `/api` akan diteruskan ke backend lokal maupun production sesuai environment.
+## ⚙️ Environment Variables
+
+### Frontend (`frontend/.env`)
+
+```env id="56udul"
+VITE_API_URL=http://localhost:8788
+```
+
+### Backend (`backend/.dev.vars`)
+
+```env id="31dvj5"
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+
+DB_NAME=simkemas
+
+R2_BUCKET=simkemas-files
+
+KV_NAMESPACE=simkemas-cache
+```
+
+> Jangan pernah meng-commit file `.env` maupun `.dev.vars` ke repository.
+>
+> Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
+```
+## 🚀 Deployment
+
+### Frontend
+
+Deploy menggunakan **Cloudflare Pages**.
+
+```bash id="q5nvh0"
+npm run build
+```
+
+Output build:
+
+```text id="u3zzx8"
+frontend/dist
+```
 
 ---
+
+### Backend
+
+Deploy menggunakan **Wrangler**.
+
+```bash id="fgd9o3"
+cd backend
+wrangler deploy
+```
+
+---
+
+### Database
+
+Membuat database Cloudflare D1:
+
+```bash id="cwmys8"
+wrangler d1 create simkemas
+```
+
+Migrasi database:
+
+```bash id="c0n6wn"
+wrangler d1 migrations apply simkemas
+```
+
+---
+
+### Storage
+
+Membuat bucket Cloudflare R2:
+
+```bash id="3y5e6e"
+wrangler r2 bucket create simkemas-files
+```
+
+---
+
+### Cache
+
+Membuat namespace KV:
+
+```bash id="d3jrd5"
+wrangler kv namespace create CACHE
+```
+
+---
+
+### Production Architecture
+
+```text id="dawpz9"
+Browser
+    │
+    ▼
+Cloudflare Pages
+    │
+    ▼
+Pages Functions
+    │
+ ┌──┴───────────┐
+ ▼              ▼
+Cloudflare D1  Cloudflare R2
+       │
+       ▼
+Cloudflare KV
+```
+
 
 ## 📈 Roadmap
 
