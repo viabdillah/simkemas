@@ -1,4 +1,4 @@
-# ![Header](https://capsule-render.vercel.app/api?type=waving\&height=280\&color=0:0F172A,50:2563EB,100:14B8A6\&text=SIMKEMAS\&fontSize=60\&fontColor=ffffff\&animation=fadeIn\&fontAlignY=38\&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow\&descAlignY=60)
+![Header](https://capsule-render.vercel.app/api?type=waving&height=280&color=0:0F172A,50:2563EB,100:14B8A6&text=SIMKEMAS&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Enterprise%20Resource%20Planning%20%7C%20Point%20of%20Sales%20%7C%20Production%20Workflow&descAlignY=60)
 
 # 🚀 SIMKEMAS
 
@@ -6,7 +6,6 @@
 
 <p align="center">
 
-![Build](https://img.shields.io/github/actions/workflow/status/viabdillah/simkemas/ci.yml?branch=main&style=for-the-badge&logo=githubactions&label=Build)
 ![Version](https://img.shields.io/github/v/release/viabdillah/simkemas?style=for-the-badge&label=Version)
 ![Release](https://img.shields.io/github/release-date/viabdillah/simkemas?style=for-the-badge&label=Release)
 ![Last Commit](https://img.shields.io/github/last-commit/viabdillah/simkemas?style=for-the-badge&label=Last%20Commit)
@@ -19,23 +18,24 @@
 
 ---
 
-## 📚 Daftar Isi
+## Daftar Isi
 
-- [✨ Tentang](#-tentang-simkemas)
-- [🖥️ Preview](#️-preview)
-- [📦 Modul Utama](#-modul-utama)
-- [📊 Dashboard](#-dashboard)
-- [🔒 Keamanan](#-keamanan)
-- [🏗️ Arsitektur Sistem](#️-system-architecture)
-- [🔄 Workflow Produksi](#-workflow-produksi)
-- [⚙️ Tech Stack](#️-tech-stack)
-- [📁 Struktur Project](#-struktur-project)
-- [🔌 REST API](#-rest-api)
-- [⚙️ Environment Variables](#️-environment-variables)
-- [🚀 Deployment](#-deployment)
-- [📈 Roadmap](#-roadmap)
-- [🤝 Kontribusi](#-kontribusi)
-- [📜 Lisensi](#-lisensi)
+- [Tentang SIMKEMAS](#-tentang-simkemas)
+- [Preview](#️-preview)
+- [Modul Utama](#-modul-utama)
+- [Dashboard](#-dashboard)
+- [Keamanan](#-keamanan)
+- [Arsitektur Sistem](#️-arsitektur-sistem)
+- [Workflow Produksi](#-workflow-produksi)
+- [Tech Stack](#️-tech-stack)
+- [Struktur Project](#-struktur-project)
+- [REST API](#-rest-api)
+- [Environment Variables](#️-environment-variables)
+- [Quick Start](#-quick-start)
+- [Deployment](#-deployment)
+- [Roadmap](#-roadmap)
+- [Kontribusi](#-kontribusi)
+- [Lisensi](#-lisensi)
 
 ---
 
@@ -47,24 +47,20 @@ Platform ini mengintegrasikan seluruh proses bisnis dalam satu sistem, mulai dar
 
 ### 🎯 Fitur Unggulan
 
-* 🚀 ERP & POS dalam satu platform
-* 🏭 Workflow Produksi Multi Divisi
-* 📦 Manajemen Pesanan (SPK)
-* 👥 Customer Management
-* 💰 Manajemen Keuangan
-* 📊 Dashboard Analitik Real-time
-* 🔐 Role Based Access Control (RBAC)
-* ☁️ Cloudflare Serverless Architecture
+- 🚀 ERP & POS dalam satu platform
+- 🏭 Workflow Produksi Multi Divisi
+- 📦 Manajemen Pesanan (SPK)
+- 👥 Customer Management
+- 💰 Manajemen Keuangan
+- 📊 Dashboard Analitik Real-time
+- 🔐 Role Based Access Control (RBAC)
+- ☁️ Cloudflare Serverless Architecture
 
 ---
 
 ## 🖥️ Preview
 
-<p align="center">
-
-<img src="docs/dashboard.png" width="900"/>
-
-</p>
+> 🚧 Coming Soon.
 
 ---
 
@@ -72,14 +68,14 @@ Platform ini mengintegrasikan seluruh proses bisnis dalam satu sistem, mulai dar
 
 ### 🛒 Point of Sales (POS)
 
-* Pembuatan SPK
-* Data Pelanggan
-* Data Produk Kemasan
-* Pembayaran DP
-* Pelunasan
-* Cicilan
-* Cetak Invoice
-* Riwayat Transaksi
+- Pembuatan SPK
+- Data Pelanggan
+- Data Produk Kemasan
+- Pembayaran DP
+- Pelunasan
+- Cicilan
+- Cetak Invoice
+- Riwayat Transaksi
 
 ### 🎨 Workflow Produksi
 
@@ -102,22 +98,19 @@ Ready Pickup
 ```
 
 #### 🎨 Divisi Desain
-
-* Drag & Drop Workflow
-* Approval Desain
-* Upload File
+- Drag & Drop Workflow
+- Approval Desain
+- Upload File
 
 #### 🖨️ Divisi Produksi
-
-* Monitoring Produksi
-* Validasi Material
-* Status Mesin
+- Monitoring Produksi
+- Validasi Material
+- Status Mesin
 
 #### 📦 Divisi Packaging
-
-* Quality Control
-* Packing
-* Ready Pickup
+- Quality Control
+- Packing
+- Ready Pickup
 
 ---
 
@@ -125,58 +118,52 @@ Ready Pickup
 
 Dashboard menyediakan informasi bisnis secara real-time, meliputi:
 
-* 📈 Omzet
-* 📦 SPK Aktif
-* 👥 Data Pelanggan
-* 💰 Cashflow
-* ⭐ Produk Terlaris
-* 📄 Export CSV
+- 📈 Omzet
+- 📦 SPK Aktif
+- 👥 Data Pelanggan
+- 💰 Cashflow
+- ⭐ Produk Terlaris
+- 📄 Export CSV
 
 ---
 
 ## 🔒 Keamanan
 
-| Fitur                            | Status |
-| -------------------------------- | :----: |
-| Role Based Access Control (RBAC) |    ✅   |
-| Audit Log                        |    ✅   |
-| Permission Management            |    ✅   |
-| Secure Authentication            |    ✅   |
+| Fitur                             | Status |
+| ---------------------------------- | :----: |
+| Role Based Access Control (RBAC)  |   ✅   |
+| Audit Log                          |   ✅   |
+| Permission Management              |   ✅   |
+| Secure Authentication              |   ✅   |
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Arsitektur Sistem
 
 ```mermaid
 flowchart TB
 
-%% ===== Client Layer =====
 subgraph CLIENT["🖥️ Client Layer"]
     WEB["🌐 Web Application<br/>React 19 + Vite"]
 end
 
-%% ===== Edge Layer =====
 subgraph EDGE["☁️ Cloudflare Edge"]
     API["⚡ Pages Functions"]
     AUTH["🔐 Authentication"]
     CACHE["⚡ KV Cache"]
 end
 
-%% ===== Data Layer =====
 subgraph DATA["🗄️ Data Layer"]
     D1[("Cloudflare D1")]
     R2["📁 Cloudflare R2"]
 end
 
-%% ===== Shared Layer =====
 subgraph SHARED["📦 Shared Package"]
     TYPES["Types"]
     UTILS["Utilities"]
 end
 
-%% ===== Flow =====
 WEB --> API
-
 API --> AUTH
 API --> D1
 API --> R2
@@ -184,17 +171,16 @@ API --> CACHE
 
 API -. uses .-> TYPES
 API -. uses .-> UTILS
-
 WEB -. uses .-> TYPES
 WEB -. uses .-> UTILS
 
-%% ===== Style =====
 style CLIENT fill:#E0F2FE,stroke:#0284C7
 style EDGE fill:#FEF3C7,stroke:#F59E0B
 style DATA fill:#DCFCE7,stroke:#16A34A
 style SHARED fill:#F3E8FF,stroke:#8B5CF6
-
 ```
+
+---
 
 ## 🔄 Workflow Produksi
 
@@ -230,17 +216,17 @@ style G fill:#16A34A,color:#fff
 ## ⚙️ Tech Stack
 
 | Layer          | Teknologi                  |
-| -------------- | -------------------------- |
-| Frontend       | React 19                   |
-| Build Tool     | Vite 7                     |
-| Styling        | Tailwind CSS v4            |
-| Backend        | Cloudflare Pages Functions |
-| Database       | Cloudflare D1              |
-| Object Storage | Cloudflare R2              |
-| Cache          | Cloudflare KV              |
-| Icons          | Lucide React               |
-| Drag & Drop    | Hello Pangea DnD           |
-| Architecture   | Monorepo (npm Workspaces)  |
+| -------------- | --------------------------- |
+| Frontend       | React 19                    |
+| Build Tool     | Vite 7                      |
+| Styling        | Tailwind CSS v4              |
+| Backend        | Cloudflare Pages Functions   |
+| Database       | Cloudflare D1                |
+| Object Storage | Cloudflare R2                |
+| Cache          | Cloudflare KV                 |
+| Icons          | Lucide React                   |
+| Drag & Drop    | Hello Pangea DnD                |
+| Architecture   | Monorepo (npm Workspaces)        |
 
 ---
 
@@ -264,59 +250,209 @@ style G fill:#16A34A,color:#fff
 ├── 📄 README.md
 ├── 📄 LICENSE
 └── 📄 .gitignore
-
 ```
 
-> **Catatan**
->
-> Folder `backend` tidak termasuk dalam **npm workspace** karena tidak memiliki dependency Node.js. Seluruh fungsi dijalankan langsung menggunakan **Cloudflare Pages Functions** melalui `wrangler`.
+> **Catatan:** Folder `backend` tidak termasuk dalam **npm workspace** karena tidak memiliki dependency Node.js. Seluruh fungsi dijalankan langsung menggunakan **Cloudflare Pages Functions** melalui `wrangler`.
+
+---
+
+## 🔌 REST API
+
+Seluruh endpoint menggunakan prefix `/api`.
+
+### Authentication
+
+| Method | Endpoint       | Deskripsi          |
+| ------ | -------------- | ------------------- |
+| POST   | `/auth/login`  | Login pengguna      |
+| POST   | `/auth/logout` | Logout               |
+| GET    | `/auth/me`     | Informasi pengguna   |
+
+### Customers
+
+| Method | Endpoint          |
+| ------ | ------------------ |
+| GET    | `/customers`        |
+| POST   | `/customers`         |
+| PUT    | `/customers/:id`      |
+| DELETE | `/customers/:id`       |
+
+### Orders (SPK)
+
+| Method | Endpoint       |
+| ------ | --------------- |
+| GET    | `/orders`        |
+| POST   | `/orders`         |
+| GET    | `/orders/:id`       |
+| PUT    | `/orders/:id`        |
+
+### Production
+
+| Method | Endpoint                  |
+| ------ | --------------------------- |
+| GET    | `/production`                |
+| PUT    | `/production/:id/status`      |
+
+### Finance
+
+| Method | Endpoint      |
+| ------ | -------------- |
+| GET    | `/payments`     |
+| POST   | `/payments`      |
+| GET    | `/cashflow`       |
+
+> Seluruh endpoint mengembalikan response dalam format JSON.
+
+---
 
 ## ⚙️ Environment Variables
 
 ### Frontend (`frontend/.env`)
 
-```env id="56udul"
+```env
 VITE_API_URL=http://localhost:8788
 ```
 
 ### Backend (`backend/.dev.vars`)
 
-```env id="31dvj5"
+```env
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
-
 DB_NAME=simkemas
-
 R2_BUCKET=simkemas-files
-
 KV_NAMESPACE=simkemas-cache
-
 ```
 
-> Jangan pernah meng-commit file `.env` maupun `.dev.vars` ke repository.
->
-> Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
+> Jangan pernah meng-commit file `.env` maupun `.dev.vars` ke repository. Gunakan `.env.example` sebagai template konfigurasi untuk developer baru.
+
+---
 
 ## 🚀 Quick Start
 
+### Clone Repository
+
 ```bash
 git clone https://github.com/viabdillah/simkemas.git
-
 cd simkemas
-
-npm install
-
-npm run dev
 ```
 
-## ✨ Highlights
+### Install dependency (root + frontend workspace)
 
-- 🚀 ERP + POS dalam satu platform
-- 🏭 Workflow Produksi berbasis Kanban
-- 📦 Manajemen SPK
-- 📊 Dashboard Real-time
-- 🔐 RBAC & Audit Log
-- ☁️ Cloudflare Native Architecture
+```bash
+npm install
+```
+
+### Jalankan development server
+
+Butuh 2 terminal terpisah:
+
+**Terminal 1 — Frontend (Vite)**
+```bash
+cd frontend
+npm run dev
+```
+→ http://localhost:5173
+
+**Terminal 2 — Backend (Cloudflare Pages Functions)**
+```bash
+cd backend
+wrangler pages dev functions --port 8788
+```
+→ http://localhost:8788
+
+> 💡 Frontend memanggil API backend melalui proxy yang dikonfigurasi di `vite.config.js` (`/api` → backend lokal atau URL backend production, tergantung environment).
+
+---
+
+## 📦 Deployment
+
+### Frontend
+
+Deploy menggunakan **Cloudflare Pages**.
+
+```bash
+npm run build
+```
+
+Output build: `frontend/dist`
+
+### Backend
+
+Deploy menggunakan **Wrangler**.
+
+```bash
+cd backend
+wrangler deploy
+```
+
+### Database
+
+Membuat database Cloudflare D1:
+
+```bash
+wrangler d1 create simkemas
+```
+
+Migrasi database:
+
+```bash
+wrangler d1 migrations apply simkemas
+```
+
+### Storage
+
+Membuat bucket Cloudflare R2:
+
+```bash
+wrangler r2 bucket create simkemas-files
+```
+
+### Cache
+
+Membuat namespace KV:
+
+```bash
+wrangler kv namespace create CACHE
+```
+
+### Production Architecture
+
+```text
+Browser
+    │
+    ▼
+Cloudflare Pages
+    │
+    ▼
+Pages Functions
+    │
+ ┌──┴───────────┐
+ ▼              ▼
+Cloudflare D1  Cloudflare R2
+       │
+       ▼
+Cloudflare KV
+```
+
+---
+
+## 📈 Roadmap
+
+| Status | Modul                  |
+| :----: | ----------------------- |
+|   ✅   | Point of Sales           |
+|   ✅   | Workflow Produksi         |
+|   ✅   | Dashboard                   |
+|   ✅   | Manajemen Keuangan            |
+|   ✅   | Export CSV                      |
+|   🚧   | WhatsApp Notification              |
+|   🚧   | Dashboard Mobile                     |
+|   🚧   | QR Code                                |
+|   🚧   | Multi Cabang                             |
+|   🚧   | Cloud Backup                               |
+|   🚧   | AI Analytics                                 |
+
+---
 
 ## 🤝 Kontribusi
 
@@ -346,16 +482,12 @@ Project ini menggunakan **MIT License**.
 
 ---
 
-<p align="center">
- 
 ## ⭐ SIMKEMAS
 
 **ERP • POS • Workflow Produksi • Dashboard Analytics**
 
-Dibangun menggunakan **React**, **Cloudflare Workers**, dan **Tailwind CSS**.
+Dibangun menggunakan **React**, **Cloudflare Pages Functions**, dan **Tailwind CSS**.
 
 **© 2026 Divi Abdillah Almasrur**
 
-</p>
-
-![Footer](https://capsule-render.vercel.app/api?type=waving\&height=180\&color=0:0F172A,50:2563EB,100:14B8A6\&section=footer)
+![Footer](https://capsule-render.vercel.app/api?type=waving&height=180&color=0:0F172A,50:2563EB,100:14B8A6&section=footer)
