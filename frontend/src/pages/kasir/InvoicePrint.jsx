@@ -83,8 +83,8 @@ export default function InvoicePrint() {
             <div className="flex items-center gap-2 text-slate-900 font-bold text-2xl mb-2">
               <Package size={28} /> SIMKEMAS
             </div>
-            <p className="text-sm text-slate-600">Jl. Teknologi Kemasan No. 123, Jakarta</p>
-            <p className="text-sm text-slate-600">Telp: 0812-3456-7890 | Web: simkemas.id</p>
+            <p className="text-sm text-slate-600">Jl. Soekarno-Hatta, Kaduagung Tengah, Cibadak, Lebak, Banten 42317</p>
+            <p className="text-sm text-slate-600">Telp: +62 851-8304-3381 | Web: -</p>
           </div>
           <div className="text-right">
             <h1 className="text-3xl font-black text-slate-800 uppercase tracking-widest mb-1">INVOICE</h1>
