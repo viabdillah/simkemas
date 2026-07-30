@@ -1,9 +1,31 @@
+# Dependencies
 node_modules/
-.dev.vars
+**/node_modules/
+
+# Env & Secrets (PALING PENTING)
 .env
-dist/
+.env.*
+.dev.vars
+**/.dev.vars
+
+# Cloudflare Wrangler
 .wrangler/
+**/.wrangler/
+
+# Build output
+dist/
+**/dist/
+backend/public/
+
+# Editor & OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
 .DS_Store
+
+# Logs
+*.log
+npm-debug.log*
 package-lock.json
 package.json
 backup-sebelum-deploy.sql
