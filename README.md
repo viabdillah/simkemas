@@ -345,7 +345,9 @@ Pull Request
 Project ini menggunakan **MIT License**.
 
 ---
+
 <p align="center">
+ 
 ## ⭐ SIMKEMAS
 
 **ERP • POS • Workflow Produksi • Dashboard Analytics**
@@ -353,6 +355,7 @@ Project ini menggunakan **MIT License**.
 Dibangun menggunakan **React**, **Cloudflare Workers**, dan **Tailwind CSS**.
 
 **© 2026 Divi Abdillah Almasrur**
+
 </p>
 
 ![Footer](https://capsule-render.vercel.app/api?type=waving\&height=180\&color=0:0F172A,50:2563EB,100:14B8A6\&section=footer)
