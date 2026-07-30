@@ -1,33 +1,35 @@
 # Dependencies
 node_modules/
-**/node_modules/
+.pnp
+.pnp.js
 
-# Env & Secrets (PALING PENTING)
+# Build outputs
+dist/
+build/
+packages/frontend/dist/
+packages/backend/public/
+
+# Environment variables & Secrets (SANGAT PENTING)
 .env
-.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .dev.vars
-**/.dev.vars
 
 # Cloudflare Wrangler
 .wrangler/
-**/.wrangler/
-
-# Build output
-dist/
-**/dist/
-backend/public/
-
-# Editor & OS
-.vscode/*
-!.vscode/extensions.json
-.idea/
-.DS_Store
 
 # Logs
-*.log
 npm-debug.log*
-package-lock.json
-package.json
-**/backup-sebelum-deploy.sql
+yarn-debug.log*
+yarn-error.log*
 
-**/components.json
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

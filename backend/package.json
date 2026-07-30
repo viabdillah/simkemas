@@ -1,0 +1,14 @@
+{
+  "name": "@simkemas/backend",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public"
+  },
+  "dependencies": {
+    "@simkemas/shared": "*"
+  },
+  "devDependencies": {
+    "wrangler": "^4.114.0"
+  }
+}
