@@ -28,4 +28,6 @@ backend/public/
 npm-debug.log*
 package-lock.json
 package.json
-backup-sebelum-deploy.sql
+**/backup-sebelum-deploy.sql
+
+**/components.json
