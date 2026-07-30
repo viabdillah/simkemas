@@ -223,24 +223,21 @@ style G fill:#16A34A,color:#fff
 
 # 📁 Struktur Project
 
-```text
 📦 SIMKEMAS
 │
-├── 📁 apps
-│   ├── 🌐 frontend
-│   └── ⚡ backend
+├── 🌐 frontend              # React 19 + Vite + Tailwind CSS (punya package.json sendiri)
 │
-├── 📁 packages
+├── ⚡ backend               # Cloudflare Pages Functions (API)
+│   └── functions
+│       ├── _lib             # Helper (crypto, jwt, audit, dll)
+│       └── api              # Endpoint API
 │
-├── 📁 docs
-│   └── 🖼️ images
+├── 🔗 shared/src            # Tipe & util yang dipakai bersama FE-BE
 │
-├── 📄 package.json
-├── 📄 wrangler.jsonc
-├── 📄 vite.config.ts
+├── 📄 package.json          # Root workspace config
+├── 📄 .gitignore
 ├── 📄 README.md
 └── 📄 LICENSE
-```
 
 ---
 
@@ -248,39 +245,28 @@ style G fill:#16A34A,color:#fff
 
 ## Clone Repository
 
-```bash
 git clone https://github.com/viabdillah/simkemas.git
-```
-
-Masuk ke folder project
-
-```bash
 cd simkemas
-```
 
-Install dependency
+## Install dependency (root + frontend workspace)
 
-```bash
 npm install
-```
 
-Jalankan development server
+## Jalankan development server
 
-```bash
+Butuh 2 terminal terpisah:
+
+**Terminal 1 — Frontend (Vite)**
+cd frontend
 npm run dev
-```
+→ http://localhost:5173
 
-Frontend
+**Terminal 2 — Backend (Cloudflare Pages Functions)**
+cd backend
+wrangler pages dev functions --port 8788
+→ http://localhost:8788
 
-```
-http://localhost:5173
-```
-
-Backend
-
-```
-Cloudflare Workers (Wrangler)
-```
+> 💡 Frontend akan memanggil API backend melalui proxy yang dikonfigurasi di `vite.config.js` (`/api` → `localhost:8788` atau URL backend yang sesuai).
 
 ---
 
