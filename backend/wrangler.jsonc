@@ -1,0 +1,21 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "simkemas-backend",
+	"pages_build_output_dir": "public",
+	"compatibility_date": "2026-07-25",
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "simkemas-db",
+			"database_id": "d011ed31-8432-4999-b418-61773bb3551a",
+			"remote": true
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "SIMKEMAS_RATE_LIMIT",
+			"id": "5eac675737fb443b8e60bff916a4b8e0",
+			"remote": true
+		}
+	]
+}
