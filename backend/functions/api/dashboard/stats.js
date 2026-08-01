@@ -13,9 +13,11 @@ export async function onRequestGet(context) {
     const userResult = await db.prepare("SELECT COUNT(id) as total FROM users WHERE is_active = 1").first();
     const totalUsers = userResult?.total || 0;
 
-    // 2. Hitung jumlah aktivitas hari ini dari audit_logs 
-    // Menggunakan date('now') bawaan SQLite untuk mendapatkan tanggal hari ini
-    const logResult = await db.prepare("SELECT COUNT(id) as total FROM audit_logs WHERE date(created_at) = date('now')").first();
+    // 2. 🛠️ BUG FIX: Hitung jumlah aktivitas hari ini dengan penyesuaian Timezone WIB (UTC+7)
+    // created_at disimpan dalam UTC, sehingga kita konversi ke WIB sebelum dicocokkan dengan hari ini (WIB)
+    const logResult = await db.prepare(
+      "SELECT COUNT(id) as total FROM audit_logs WHERE date(created_at, '+7 hours') = date('now', '+7 hours')"
+    ).first();
     const todayLogs = logResult?.total || 0;
 
     return new Response(JSON.stringify(formatResponse(true, { totalUsers, todayLogs })), {
