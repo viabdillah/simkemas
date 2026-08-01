@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Loader2, Printer, ClipboardList, CheckCircle2 } from 'lucide-react';
+import { Loader2, Printer, CheckCircle2 } from 'lucide-react';
 
 export default function WorkOrderPrint() {
   const { invoiceNo } = useParams();
@@ -109,7 +109,7 @@ export default function WorkOrderPrint() {
         <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4 mb-6">
           <div>
             <div className="flex items-center gap-2 text-slate-900 font-bold text-xl sm:text-2xl">
-              <ClipboardList size={28} className="text-amber-600" /> SURAT PERINTAH KERJA (SPK)
+              <img src="/logo-invoice.png" alt="SIMKEMAS" className="h-8 w-auto" /> SURAT PERINTAH KERJA (SPK)
             </div>
             <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mt-1">Pusat Layanan Kemasan</p>
           </div>

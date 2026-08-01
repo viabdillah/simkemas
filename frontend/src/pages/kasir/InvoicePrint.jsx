@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Loader2, Printer, Package } from 'lucide-react';
+import { Loader2, Printer} from 'lucide-react';
 
 export default function InvoicePrint() {
   const { invoiceNo } = useParams();
@@ -81,7 +81,7 @@ export default function InvoicePrint() {
         <div className="flex justify-between items-start border-b-2 border-slate-800 pb-6 mb-6">
           <div>
             <div className="flex items-center gap-2 text-slate-900 font-bold text-2xl mb-2">
-              <Package size={28} /> SIMKEMAS
+              <img src="/logo-invoice.png" alt="SIMKEMAS" className="h-8 w-auto" /> SIMKEMAS
             </div>
             <p className="text-sm text-slate-600">Jl. Soekarno-Hatta, Kaduagung Tengah, Cibadak, Lebak, Banten 42317</p>
             <p className="text-sm text-slate-600">Telp: +62 851-8304-3381 | Web: -</p>
