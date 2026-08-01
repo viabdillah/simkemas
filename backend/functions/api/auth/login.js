@@ -58,10 +58,10 @@ export async function onRequestPost(context) {
     );
     // ------------------------------------
 
-    const payload = { sub: user.id, role: user.role, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + (15 * 60) };
+    const payload = { sub: user.id, role: user.role, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + (4 * 60 * 60) };
     const token = await signJWT(payload, env.JWT_SECRET);
     const isSecure = (new URL(request.url)).hostname !== 'localhost' ? 'Secure;' : '';
-    const cookieOptions = `HttpOnly; Path=/; SameSite=Strict; ${isSecure} Max-Age=900`;
+    const cookieOptions = `HttpOnly; Path=/; SameSite=Strict; ${isSecure} Max-Age=14400`;
 
     return new Response(JSON.stringify(formatResponse(true, { message: "Login berhasil", user: { id: user.id, username: user.username, role: user.role }})), {
       status: 200, headers: { 'Content-Type': 'application/json', 'Set-Cookie': `token=${token}; ${cookieOptions}` }
