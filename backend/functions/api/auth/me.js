@@ -9,8 +9,8 @@ export async function onRequestGet(context) {
     // Kita hit database sekali lagi untuk mastiin user ini belum dihapus 
     // oleh Super Admin lain saat sesinya masih jalan (Security Check).
     const dbUser = await db.prepare(
-      "SELECT id, username, role FROM users WHERE id = ?"
-    ).bind(tokenUser.sub).first();
+  "SELECT id, username, role FROM users WHERE id = ? AND is_active = 1"
+).bind(tokenUser.sub).first();
 
     if (!dbUser) {
       const errRes = formatResponse(false, null, "User tidak ditemukan di database");
