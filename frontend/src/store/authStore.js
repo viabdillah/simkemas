@@ -51,8 +51,16 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  logout: () => {
-    set({ user: null, error: null });
-    toast.info("Anda telah keluar dari sistem");
+  logout: async () => {
+    try {
+      // 1. Beritahu backend untuk menghapus HttpOnly cookie di browser
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (err) {
+      console.error("Logout API gagal:", err.message);
+    } finally {
+      // 2. Wajib bersihkan state lokal dan tampilkan toast di blok finally
+      set({ user: null, error: null });
+      toast.info("Anda telah keluar dari sistem");
+    }
   }
 }));
