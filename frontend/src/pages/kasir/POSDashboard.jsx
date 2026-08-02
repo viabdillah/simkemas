@@ -400,7 +400,7 @@ export default function POSDashboard() {
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700">No. WhatsApp / Telp *</label>
-                <Input type="number" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08123456789" />
+                <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08123456789" />
               </div>
               <div className="space-y-1 sm:col-span-2">
                 <label className="text-xs font-semibold text-red-600">Deadline Pengambilan (Minimal H+2) *</label>
