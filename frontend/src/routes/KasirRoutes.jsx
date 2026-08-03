@@ -7,6 +7,7 @@ import WorkOrderPrint from '@/pages/kasir/WorkOrderPrint'; // <-- Import
 import Keuangan from '@/pages/kasir/Keuangan'; // <-- Import
 import DaftarTunggu from '@/pages/kasir/DaftarTunggu';
 
+
 export default function KasirRoutes() {
   return (
     <Routes>
