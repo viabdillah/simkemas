@@ -7,37 +7,91 @@ export async function onRequestPut(context) {
   if (roleCheck) return roleCheck;
 
   try {
-    const id = context.params.id; // Ini ID Produk
+    const id = context.params.id;
     const body = await context.request.json();
     const db = context.env.DB;
 
-    // Dapatkan relasi mitranya dulu
-    const targetProduct = await db.prepare("SELECT mitra_id FROM katalog_mitra WHERE id = ?").bind(id).first();
-    
-    if (!targetProduct) {
-       return new Response(JSON.stringify(formatResponse(false, null, "Produk tidak ditemukan")), { status: 404 });
+    // 1. Cek apakah ID ini milik Produk (katalog_mitra) atau milik Mitra (mitra)
+    let product = await db.prepare("SELECT id, mitra_id FROM katalog_mitra WHERE id = ?").bind(id).first();
+
+    let targetMitraId = null;
+    let productId = null;
+
+    if (product) {
+      productId = product.id;
+      targetMitraId = product.mitra_id;
+    } else {
+      const mitra = await db.prepare("SELECT id FROM mitra WHERE id = ?").bind(id).first();
+      if (mitra) {
+        targetMitraId = mitra.id;
+      }
     }
 
-    // Update parent (mitra) dan child (katalog_mitra) secara berurutan
-    await db.prepare("UPDATE mitra SET nama_mitra = ?, phone = ? WHERE id = ?").bind(body.nama_mitra, body.phone, targetProduct.mitra_id).run();
-    
-    await db.prepare(`
-      UPDATE katalog_mitra SET 
-      nama_produk = ?, label = ?, merek = ?, 
-      jenis_kemasan = ?, ukuran = ?, nib = ?, pirt = ?, halal = ?, catatan = ?
-      WHERE id = ?
-    `).bind(
-      body.nama_produk, body.label, body.merek, 
-      body.jenis_kemasan, body.ukuran, body.nib, body.pirt, body.halal, body.catatan, id
-    ).run();
+    if (!targetMitraId) {
+      return new Response(JSON.stringify(formatResponse(false, null, "Data mitra/produk tidak ditemukan")), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // 2. Update Header Mitra (nama_mitra & phone)
+    if (body.nama_mitra || body.phone) {
+      await db.prepare(`
+        UPDATE mitra 
+        SET nama_mitra = COALESCE(?, nama_mitra), 
+            phone = COALESCE(?, phone) 
+        WHERE id = ?
+      `).bind(body.nama_mitra || null, body.phone || null, targetMitraId).run();
+    }
+
+    // 3. Update Detail Produk (jika ID yang diedit adalah ID Produk)
+    if (productId) {
+      await db.prepare(`
+        UPDATE katalog_mitra SET 
+          nama_produk = COALESCE(?, nama_produk), 
+          label = ?, 
+          merek = ?, 
+          jenis_kemasan = ?, 
+          ukuran = ?, 
+          nib = ?, 
+          pirt = ?, 
+          halal = ?, 
+          catatan = ?
+        WHERE id = ?
+      `).bind(
+        body.nama_produk || null, 
+        body.label || '', 
+        body.merek || '', 
+        body.jenis_kemasan || '', 
+        body.ukuran || '', 
+        body.nib || '', 
+        body.pirt || '', 
+        body.halal || '', 
+        body.catatan || '', 
+        productId
+      ).run();
+    }
 
     const ip = context.request.headers.get('CF-Connecting-IP') || 'Local';
-    await insertAuditLog(db, context.data.user.sub, 'UPDATE_MITRA', `Mengedit data produk ${body.nama_produk} milik ${body.nama_mitra}`, ip);
+    await insertAuditLog(
+      db, 
+      context.data.user.sub, 
+      'UPDATE_MITRA', 
+      `Mengedit data mitra/produk: ${body.nama_mitra || body.nama_produk || id}`, 
+      ip
+    );
 
-    return new Response(JSON.stringify(formatResponse(true, { message: "Data berhasil diperbarui" })));
+    return new Response(JSON.stringify(formatResponse(true, { message: "Data berhasil diperbarui" })), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (error) {
     console.error("PUT /api/mitra/[id] Error:", error);
-    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { status: 500 });
+    return new Response(JSON.stringify(formatResponse(false, null, `Terjadi kesalahan server: ${error.message}`)), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 
@@ -46,27 +100,48 @@ export async function onRequestDelete(context) {
   if (roleCheck) return roleCheck;
 
   try {
-    const id = context.params.id; // Ini ID Produk
+    const id = context.params.id;
     const db = context.env.DB;
 
-    // Join untuk mendapakan nama mitra di Audit Log
-    const target = await db.prepare(`
-      SELECT m.nama_mitra, km.nama_produk 
+    // Deteksi apakah menghapus 1 produk atau menghapus 1 mitra penuh
+    const product = await db.prepare(`
+      SELECT km.id, km.nama_produk, m.nama_mitra 
       FROM katalog_mitra km 
       JOIN mitra m ON km.mitra_id = m.id 
       WHERE km.id = ?
     `).bind(id).first();
 
-    // ⚠️ PERUBAHAN PENTING: Karena lo menghapus kolom is_active di schema terbaru,
-    // kita ubah dari SOFT DELETE menjadi HARD DELETE.
-    await db.prepare("DELETE FROM katalog_mitra WHERE id = ?").bind(id).run();
+    if (product) {
+      await db.prepare("DELETE FROM katalog_mitra WHERE id = ?").bind(id).run();
+      
+      const ip = context.request.headers.get('CF-Connecting-IP') || 'Local';
+      await insertAuditLog(db, context.data.user.sub, 'DELETE_MITRA_PRODUCT', `Menghapus produk ${product.nama_produk} milik ${product.nama_mitra}`, ip);
+    } else {
+      const mitra = await db.prepare("SELECT nama_mitra FROM mitra WHERE id = ?").bind(id).first();
+      if (mitra) {
+        // Hapus mitra (produk terhapus otomatis karena CASCADE)
+        await db.prepare("DELETE FROM mitra WHERE id = ?").bind(id).run();
 
-    const ip = context.request.headers.get('CF-Connecting-IP') || 'Local';
-    await insertAuditLog(db, context.data.user.sub, 'DELETE_MITRA', `Menghapus data produk ${target?.nama_produk} milik ${target?.nama_mitra}`, ip);
+        const ip = context.request.headers.get('CF-Connecting-IP') || 'Local';
+        await insertAuditLog(db, context.data.user.sub, 'DELETE_MITRA', `Menghapus mitra ${mitra.nama_mitra} beserta seluruh produknya`, ip);
+      } else {
+        return new Response(JSON.stringify(formatResponse(false, null, "Data tidak ditemukan")), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    }
 
-    return new Response(JSON.stringify(formatResponse(true, { message: "Data berhasil dihapus" })));
+    return new Response(JSON.stringify(formatResponse(true, { message: "Data berhasil dihapus" })), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (error) {
     console.error("DELETE /api/mitra/[id] Error:", error);
-    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { status: 500 });
+    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
