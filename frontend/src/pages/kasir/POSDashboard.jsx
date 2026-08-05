@@ -76,21 +76,15 @@ export default function POSDashboard() {
     }
   };
 
-  // PENGELOMPOKAN DATA (GROUPING) UNTUK TAHAP 1
-  const groupedMitraMap = mitraList.reduce((acc, curr) => {
-    const key = `${curr.nama_mitra}-${curr.phone}`;
-    if (!acc[key]) {
-      acc[key] = { nama_mitra: curr.nama_mitra, phone: curr.phone, products: [] };
-    }
-    acc[key].products.push(curr);
-    return acc;
-  }, {});
-  
-  const groupedMitraArray = Object.values(groupedMitraMap);
-  const filteredGroups = groupedMitraArray.filter(g => 
-    g.nama_mitra.toLowerCase().includes(searchMitraQuery.toLowerCase()) ||
-    g.products.some(p => p.nama_produk.toLowerCase().includes(searchMitraQuery.toLowerCase()) || (p.merek && p.merek.toLowerCase().includes(searchMitraQuery.toLowerCase())))
-  );
+  // 🚀 KARENA BACKEND (OPSI B) SUDAH MENGELOMPOKKAN DATA, KITA TINGGAL FILTER SAJA
+  const filteredGroups = mitraList.filter(m => {
+    const matchName = m.nama_mitra?.toLowerCase().includes(searchMitraQuery.toLowerCase());
+    const matchProduct = m.products && m.products.some(p => 
+      p.nama_produk?.toLowerCase().includes(searchMitraQuery.toLowerCase()) || 
+      p.merek?.toLowerCase().includes(searchMitraQuery.toLowerCase())
+    );
+    return matchName || matchProduct;
+  });
 
   const handleSelectGroup = (group) => {
     setSelectedMitraGroup(group);
@@ -269,7 +263,7 @@ export default function POSDashboard() {
                             <div key={idx} onClick={() => handleSelectGroup(g)} className="p-3 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-all cursor-pointer flex items-center justify-between group">
                               <div>
                                 <div className="font-bold text-slate-800 group-hover:text-primary">{g.nama_mitra}</div>
-                                <div className="text-xs text-slate-500">WA: {g.phone} • {g.products.length} Produk Terdaftar</div>
+                                <div className="text-xs text-slate-500">WA: {g.phone} • {g.products?.length || 0} Produk Terdaftar</div>
                               </div>
                               <Button size="sm" variant="ghost" className="text-primary">Lihat Produk</Button>
                             </div>
