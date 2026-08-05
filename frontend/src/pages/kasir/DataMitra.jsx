@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, Loader2, RefreshCw, Users, ArrowLeft, PlusCircle } from 'lucide-react';
 
 export default function DataMitra() {
@@ -225,33 +226,66 @@ export default function DataMitra() {
               </TableHeader>
               <TableBody>
                 {isLoading ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-10"><Loader2 className="animate-spin mx-auto text-primary" /></TableCell></TableRow>
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-10">
+                      <Loader2 className="mx-auto animate-spin text-primary" />
+                    </TableCell>
+                  </TableRow>
                 ) : mitras.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-10 text-slate-500">Belum ada data mitra.</TableCell></TableRow>
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-10 text-slate-500">
+                      Belum ada data mitra yang terdaftar.
+                    </TableCell>
+                  </TableRow>
                 ) : (
-                  mitras.map((m) => (
-                    <TableRow key={m.id} className="hover:bg-slate-50/50">
-                      <TableCell className="font-bold text-slate-700">{m.nama_mitra}</TableCell>
-                      <TableCell>{m.phone}</TableCell>
-                      <TableCell>
-                        <div className="font-semibold text-primary">{m.nama_produk}</div>
-                        <div className="text-xs text-slate-500">{m.merek} - {m.label}</div>
+                  mitras.map((mitra, index) => (
+                    <TableRow key={mitra.phone || index} className="hover:bg-slate-50">
+                      <TableCell className="font-bold text-slate-800">
+                        {mitra.nama_mitra}
                       </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{m.jenis_kemasan}</div>
-                        <div className="text-xs text-slate-500">{m.ukuran}</div>
+                      <TableCell className="font-mono text-sm text-slate-600">
+                        {mitra.phone}
                       </TableCell>
+                      
+                      {/* TAMPILAN BARU: Katalog Produk Menjadi Kumpulan Badge Dinamis */}
                       <TableCell>
-                        <div className="text-[10px] space-y-0.5">
-                          {m.nib && <div><span className="font-semibold">NIB:</span> {m.nib}</div>}
-                          {m.pirt && <div><span className="font-semibold">PIRT:</span> {m.pirt}</div>}
-                          {m.halal && <div><span className="font-semibold">HALAL:</span> {m.halal}</div>}
-                          {!m.nib && !m.pirt && !m.halal && <span className="text-slate-400">Tidak ada</span>}
+                        <div className="flex flex-wrap gap-2">
+                          {mitra.products && mitra.products.map(p => (
+                            <Badge key={p.id} variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm flex flex-col items-start px-3 py-1 text-xs">
+                              <span className="font-bold">{p.nama_produk}</span>
+                              <span className="text-[10px] text-slate-500 font-normal">
+                                {p.jenis_kemasan} {p.ukuran && `- ${p.ukuran}`}
+                              </span>
+                            </Badge>
+                          ))}
                         </div>
                       </TableCell>
+
+                      <TableCell className="text-xs text-slate-500">
+                        {new Date(mitra.joined_date).toLocaleDateString('id-ID')}
+                      </TableCell>
+                      
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" onClick={() => openEditForm(m)} className="cursor-pointer"><Edit size={16} className="text-blue-600"/></Button>
-                        <Button variant="ghost" size="sm" onClick={() => setDeleteId(m.id)} className="cursor-pointer"><Trash2 size={16} className="text-red-600"/></Button>
+                        <div className="flex justify-end gap-2">
+                          {/* Sambungkan event onClick ke openEditForm */}
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="text-amber-600 hover:bg-amber-50 cursor-pointer" 
+                            onClick={() => openEditForm(mitra)} 
+                          >
+                            <Edit size={16} />
+                          </Button>
+                          
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="text-red-600 hover:bg-red-50 cursor-pointer" 
+                            onClick={() => setDeleteId(mitra.phone)} 
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

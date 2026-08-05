@@ -3,21 +3,50 @@ import { requireRole } from '../../_lib/rbac';
 import { insertAuditLog } from '../../_lib/audit';
 
 export async function onRequestGet(context) {
-  // Tetap sama, tidak ada yang berubah
   const roleCheck = requireRole(context.data.user, ['Super Administrasi', 'Kasir', 'Manajer']);
   if (roleCheck) return roleCheck;
 
   try {
     const db = context.env.DB;
-    const result = await db.prepare("SELECT * FROM katalog_mitra ORDER BY created_at DESC").all();
     
-    return new Response(JSON.stringify(formatResponse(true, result.results)), {
+    // 🚀 SQL MAGIC: Mengelompokkan produk ke dalam array 'products' per pelanggan
+    const { results } = await db.prepare(`
+      SELECT 
+        nama_mitra, 
+        phone, 
+        MIN(created_at) as joined_date,
+        json_group_array(json_object(
+          'id', id,
+          'nama_produk', nama_produk,
+          'merek', merek,
+          'label', label,
+          'jenis_kemasan', jenis_kemasan,
+          'ukuran', ukuran,
+          'nib', nib,
+          'pirt', pirt,
+          'halal', halal,
+          'catatan', catatan
+        )) as products
+      FROM katalog_mitra 
+      GROUP BY phone, nama_mitra
+      ORDER BY joined_date DESC
+    `).all();
+
+    // Parse string JSON dari database menjadi array object JavaScript
+    const groupedResults = results.map(row => ({
+      ...row,
+      products: JSON.parse(row.products)
+    }));
+
+    return new Response(JSON.stringify(formatResponse(true, groupedResults)), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
     console.error("GET /api/mitra Error:", error);
-    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { 
+      status: 500, headers: { 'Content-Type': 'application/json' } 
+    });
   }
 }
 
