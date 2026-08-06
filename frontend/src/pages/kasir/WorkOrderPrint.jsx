@@ -60,7 +60,7 @@ export default function WorkOrderPrint() {
   const { transaction, items } = data;
 
   // Logika Penentuan Status Per Divisi
-  const currentStage = transaction.current_stage || 'Desainer'; // Fallback
+  const currentStage = transaction.current_stage || 'Desainer'; 
   
   const getStatus = (roleIndex) => {
     const stages = ['Desainer', 'Operator Mesin', 'Operator Packaging', 'Kasir', 'Selesai'];
@@ -136,27 +136,34 @@ export default function WorkOrderPrint() {
           {items.map((item, idx) => {
             let legalitasObj = { nibNo: '', pirtNo: '', halalNo: '' };
             try {
-              if (item.legalitas) legalitasObj = JSON.parse(item.legalitas);
+              if (item.legalitas) {
+                legalitasObj = typeof item.legalitas === 'string' ? JSON.parse(item.legalitas) : item.legalitas;
+              }
             } catch (e) {
               console.error(e);
             }
+
+            // 🚀 Sinkronisasi Variabel Data
+            const nama = item.nama_kemasan || item.nama || '-';
+            const merek = item.merek_kemasan || item.merek || '-';
+            const jenis = item.jenis_kemasan || item.jenis || '-';
 
             return (
               <div key={item.id} className="p-4 border-2 border-slate-200 rounded-lg space-y-3 bg-white">
                 <div className="flex justify-between items-start border-b border-slate-100 pb-2">
                   <div>
                     <span className="text-xs font-bold text-amber-600">ITEM #{idx + 1}</span>
-                    <h4 className="font-black text-lg text-slate-900 leading-tight mt-0.5">{item.nama_kemasan}</h4>
+                    <h4 className="font-black text-lg text-slate-900 leading-tight mt-0.5">{nama}</h4>
                   </div>
                   <span className="font-black text-lg bg-slate-800 text-white px-3 py-1 rounded-md shrink-0">
                     {item.qty} PCS
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 text-xs pt-1">
-                  <div><span className="text-slate-500 block mb-0.5">Merek:</span><b className="text-slate-800">{item.merek_kemasan}</b></div>
-                  <div><span className="text-slate-500 block mb-0.5">Label/Varian:</span><b className="text-slate-800">{item.label_kemasan}</b></div>
-                  <div><span className="text-slate-500 block mb-0.5">Jenis Kemasan:</span><b className="text-slate-800">{item.jenis_kemasan}</b></div>
+                {/* 🚀 Mengubah grid jadi 2 kolom (Tanpa Label) */}
+                <div className="grid grid-cols-2 gap-3 text-xs pt-1">
+                  <div><span className="text-slate-500 block mb-0.5">Merek:</span><b className="text-slate-800">{merek}</b></div>
+                  <div><span className="text-slate-500 block mb-0.5">Jenis Kemasan:</span><b className="text-slate-800">{jenis}</b></div>
                 </div>
 
                 {(legalitasObj.nibNo || legalitasObj.pirtNo || legalitasObj.halalNo) && (

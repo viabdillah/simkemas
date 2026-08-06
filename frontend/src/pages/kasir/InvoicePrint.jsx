@@ -36,8 +36,8 @@ export default function InvoicePrint() {
     window.print();
   };
 
-  // Helper Format Rupiah
-  const formatRp = (angka) => `Rp ${parseInt(angka).toLocaleString('id-ID')}`;
+  // Helper Format Rupiah (Lebih aman dari NaN)
+  const formatRp = (angka) => `Rp ${(parseInt(angka) || 0).toLocaleString('id-ID')}`;
   
   // Helper Format Tanggal
   const formatDate = (dateString) => {
@@ -53,7 +53,7 @@ export default function InvoicePrint() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
         <h1 className="text-2xl font-bold text-slate-800">Invoice Tidak Ditemukan</h1>
-        <Button onClick={() => navigate('/kasir')}>Kembali ke POS</Button>
+        <Button onClick={() => navigate('/kasir')} className="cursor-pointer">Kembali ke POS</Button>
       </div>
     );
   }
@@ -66,9 +66,6 @@ export default function InvoicePrint() {
       
       {/* Tombol Aksi (AKAN HILANG SAAT DICETAK KARENA CLASS 'print:hidden') */}
       <div className="max-w-3xl mx-auto mb-6 flex justify-between print:hidden">
-        {/* <Button variant="outline" className="bg-white" onClick={() => navigate('/kasir')}>
-          <ArrowLeft className="mr-2 w-4 h-4" /> Kembali
-        </Button> */}
         <Button onClick={handlePrint} className="bg-primary shadow-lg cursor-pointer">
           <Printer className="mr-2 w-4 h-4" /> Cetak Invoice
         </Button>
@@ -103,8 +100,7 @@ export default function InvoicePrint() {
           <div className="text-right">
             <p className="text-xs text-slate-500 font-bold uppercase mb-1">Batas Waktu Pengambilan:</p>
             <p className="text-md font-bold text-slate-900">{formatDate(transaction.deadline)}</p>
-            <div className="mt-2 inline-block px-3 py-1 rounded-full border-2 text-sm font-bold uppercase
-              ${transaction.status === 'Lunas' ? 'border-green-600 text-green-600' : 'border-red-600 text-red-600'}">
+            <div className={`mt-2 inline-block px-3 py-1 rounded-full border-2 text-sm font-bold uppercase ${transaction.status === 'Lunas' ? 'border-green-600 text-green-600' : 'border-red-600 text-red-600'}`}>
               {transaction.status}
             </div>
           </div>
@@ -121,18 +117,26 @@ export default function InvoicePrint() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => (
-              <tr key={item.id} className={index !== items.length - 1 ? 'border-b border-slate-200' : ''}>
-                <td className="py-4">
-                  <p className="font-bold text-slate-900">{item.nama_kemasan} ({item.merek_kemasan})</p>
-                  <p className="text-xs text-slate-600">Jenis: {item.jenis_kemasan} | Label: {item.label_kemasan}</p>
-                  {item.catatan && <p className="text-xs text-slate-500 italic mt-1">Catatan: {item.catatan}</p>}
-                </td>
-                <td className="py-4 text-center font-medium">{item.qty}</td>
-                <td className="py-4 text-right">{formatRp(item.price)}</td>
-                <td className="py-4 text-right font-bold">{formatRp(item.qty * item.price)}</td>
-              </tr>
-            ))}
+            {items.map((item, index) => {
+              // 🚀 Sinkronisasi Variabel Data (Aman dari perbedaan key Database)
+              const nama = item.nama_kemasan || item.nama || '-';
+              const merek = item.merek_kemasan || item.merek || '';
+              const jenis = item.jenis_kemasan || item.jenis || '-';
+              const harga = item.price || item.harga || 0;
+
+              return (
+                <tr key={item.id} className={index !== items.length - 1 ? 'border-b border-slate-200' : ''}>
+                  <td className="py-4">
+                    <p className="font-bold text-slate-900">{nama} {merek ? `(${merek})` : ''}</p>
+                    <p className="text-xs text-slate-600">Jenis: {jenis}</p>
+                    {item.catatan && <p className="text-xs text-slate-500 italic mt-1">Catatan: {item.catatan}</p>}
+                  </td>
+                  <td className="py-4 text-center font-medium">{item.qty}</td>
+                  <td className="py-4 text-right">{formatRp(harga)}</td>
+                  <td className="py-4 text-right font-bold">{formatRp(item.qty * harga)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 

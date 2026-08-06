@@ -2,7 +2,7 @@ import { formatResponse } from '@simkemas/shared';
 import { requireRole } from '../../_lib/rbac';
 import { insertAuditLog } from '../../_lib/audit';
 
-// 1. MENGAMBIL DATA (GET) - KEBAL PELURU 🛡️
+// 1. MENGAMBIL DATA (GET) - TANPA KOLOM LABEL 🛡️
 export async function onRequestGet(context) {
   const roleCheck = requireRole(context.data.user, ['Super Administrasi', 'Kasir', 'Manajer']);
   if (roleCheck) return roleCheck;
@@ -19,7 +19,6 @@ export async function onRequestGet(context) {
           'id', k.id,
           'nama_produk', k.nama_produk,
           'merek', k.merek,
-          'label', k.label,
           'jenis_kemasan', k.jenis_kemasan,
           'ukuran', k.ukuran,
           'nib', k.nib,
@@ -61,7 +60,7 @@ export async function onRequestGet(context) {
   }
 }
 
-// 2. MENYIMPAN DATA (POST) KE 2 TABEL
+// 2. MENYIMPAN DATA (POST) - TANPA KOLOM LABEL
 export async function onRequestPost(context) {
   const roleCheck = requireRole(context.data.user, ['Super Administrasi', 'Kasir']);
   if (roleCheck) return roleCheck;
@@ -88,14 +87,14 @@ export async function onRequestPost(context) {
     }
 
     const stmtTemplate = db.prepare(`
-      INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, label, jenis_kemasan, ukuran, nib, pirt, halal, catatan, harga)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, jenis_kemasan, ukuran, nib, pirt, halal, catatan, harga)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const p of products) {
       statements.push(
         stmtTemplate.bind(
-          crypto.randomUUID(), mitraId, p.nama_produk, p.merek || '', p.label || '', 
+          crypto.randomUUID(), mitraId, p.nama_produk, p.merek || '', 
           p.jenis_kemasan || '', p.ukuran || '', p.nib || '', p.pirt || '', p.halal || '', p.catatan || '', p.harga || 0
         )
       );

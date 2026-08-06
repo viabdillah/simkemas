@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -10,13 +10,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import KasirSidebar from '@/layouts/KasirSidebar';
 import { 
-  PackageCheck, Search, RefreshCw, ArrowLeft, Loader2, Calendar, 
+  PackageCheck, Search, RefreshCw, Loader2, Calendar, Menu, LogOut, ShoppingCart,
   ChevronLeft, ChevronRight, CheckCircle2, DollarSign, Box
 } from 'lucide-react';
 
 export default function DaftarTunggu() {
-  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -165,51 +167,94 @@ export default function DaftarTunggu() {
   const monthText = selectedMonth.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 max-w-[1600px] mx-auto bg-slate-50 min-h-screen">
+    <div className="h-[100dvh] bg-slate-100 flex flex-col font-sans overflow-hidden">
       
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-            <PackageCheck className="text-teal-600" /> Daftar Pengambilan Barang
-          </h1>
-          <p className="text-slate-500 text-sm mt-1">Kelola penyerahan barang (penuh/sebagian) dan pelunasan pembayaran pelanggan.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => navigate('/kasir')} className="gap-2 bg-white">
-            <ArrowLeft size={16} /> Kembali ke POS
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading} className="bg-white">
-            <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> Refresh
-          </Button>
-        </div>
-      </div>
+      {/* SIDEBAR COMPONENT (OFF-CANVAS) */}
+      <KasirSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
-      <Card className="bg-white border-slate-200 shadow-sm">
+      {/* HEADER UTAMA */}
+      <header className="bg-white h-16 px-4 sm:px-6 flex items-center justify-between border-b border-slate-200 shrink-0 shadow-sm z-30">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsSidebarOpen(true)} 
+            className="text-slate-600 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
+          >
+            <Menu size={22} />
+          </Button>
+          <div className="flex items-center gap-2.5 text-primary font-bold text-lg tracking-tight">
+            <ShoppingCart size={22} /> SIMKEMAS POS
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold text-slate-500 hidden sm:inline-block bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+            💻 Mode Kasir Fokus
+          </span>
+          <Button variant="ghost" size="sm" onClick={logout} className="text-red-500 hover:bg-red-50 font-bold gap-1.5 cursor-pointer px-2 sm:px-3">
+            <LogOut size={16} />
+            <span className="hidden sm:inline">Keluar</span>
+          </Button>
+        </div>
+      </header>
+
+      {/* AREA UTAMA WORKSPACE */}
+      <main className="flex-1 p-4 sm:p-6 overflow-y-auto max-w-[1700px] mx-auto w-full flex flex-col gap-6">
         
-        <CardHeader className="bg-slate-50/80 border-b border-slate-100 pb-4">
-          <div className="flex flex-col xl:flex-row gap-4 items-center justify-between">
-            
-            {/* Navigasi Bulan */}
-            <div className="flex items-center gap-2 w-full xl:w-auto bg-white border border-slate-200 p-1 rounded-lg shadow-sm">
-              <Button variant="ghost" size="icon" onClick={handlePrevMonth} className="h-8 w-8 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer">
-                <ChevronLeft size={18} />
-              </Button>
-              <div className="w-40 text-center font-bold text-slate-700 text-sm flex items-center justify-center gap-2">
-                <Calendar size={14} className="text-primary" /> {monthText}
-              </div>
-              <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer">
-                <ChevronRight size={18} />
-              </Button>
-              <div className="h-6 w-px bg-slate-200 mx-1"></div>
-              <Button variant="ghost" size="sm" onClick={handleCurrentMonth} className="h-8 text-xs font-semibold text-primary hover:bg-blue-50 px-3 cursor-pointer">
-                Bulan Ini
-              </Button>
+        {/* CARD HEADER (Terpadu) */}
+        <Card className="border-slate-200 shadow-sm shrink-0 bg-white">
+          <CardContent className="p-4 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                <PackageCheck className="text-teal-600" /> Daftar Pengambilan Barang
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">Kelola penyerahan barang (penuh/sebagian) dan pelunasan pelanggan.</p>
             </div>
 
-            {/* Filter & Search */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <Input 
+                  placeholder="Cari Invoice / Nama UMKM..." 
+                  className="pl-9 bg-slate-50 w-full border-slate-200"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Button variant="outline" onClick={handleRefresh} disabled={isLoading} className="cursor-pointer w-full sm:w-auto">
+                <RefreshCw className={`h-4 w-4 sm:mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline">Refresh</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AREA TABEL */}
+        <Card className="bg-white border-slate-200 shadow-sm flex-1 flex flex-col overflow-hidden">
+          <CardHeader className="bg-slate-50/80 border-b border-slate-100 pb-4 p-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+              
+              {/* Navigasi Bulan */}
+              <div className="flex items-center gap-2 bg-white border border-slate-200 p-1 rounded-lg shadow-sm">
+                <Button variant="ghost" size="icon" onClick={handlePrevMonth} className="h-8 w-8 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer">
+                  <ChevronLeft size={18} />
+                </Button>
+                <div className="w-40 text-center font-bold text-slate-700 text-sm flex items-center justify-center gap-2">
+                  <Calendar size={14} className="text-primary" /> {monthText}
+                </div>
+                <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer">
+                  <ChevronRight size={18} />
+                </Button>
+                <div className="h-6 w-px bg-slate-200 mx-1"></div>
+                <Button variant="ghost" size="sm" onClick={handleCurrentMonth} className="h-8 text-xs font-semibold text-primary hover:bg-blue-50 px-3 cursor-pointer">
+                  Bulan Ini
+                </Button>
+              </div>
+
+              {/* Filter Status */}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[200px] bg-white h-10 border-slate-200 shadow-sm font-medium">
+                <SelectTrigger className="w-full sm:w-[220px] bg-white h-10 border-slate-200 shadow-sm font-medium">
                   <SelectValue placeholder="Status Pengambilan" />
                 </SelectTrigger>
                 <SelectContent className="bg-white z-50">
@@ -220,24 +265,12 @@ export default function DaftarTunggu() {
                 </SelectContent>
               </Select>
 
-              <div className="relative w-full sm:w-[280px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                <Input 
-                  placeholder="Cari Invoice / Nama UMKM..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 bg-white border-slate-200 shadow-sm h-10"
-                />
-              </div>
             </div>
-
-          </div>
-        </CardHeader>
-        
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          </CardHeader>
+          
+          <CardContent className="p-0 flex-1 overflow-y-auto">
             <Table>
-              <TableHeader className="bg-slate-50">
+              <TableHeader className="bg-slate-50 sticky top-0 z-10 shadow-sm">
                 <TableRow>
                   <TableHead className="pl-6 py-4">Tgl & Invoice</TableHead>
                   <TableHead>UMKM / Telepon</TableHead>
@@ -326,9 +359,10 @@ export default function DaftarTunggu() {
                 )}
               </TableBody>
             </Table>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+      </main>
 
       {/* MODAL PROSES PENGAMBILAN & PEMBAYARAN */}
       <Dialog open={!!pickupModalData} onOpenChange={(open) => !open && setPickupModalData(null)}>
@@ -426,13 +460,16 @@ export default function DaftarTunggu() {
                           </Label>
                         </div>
                         {paymentOption === 'custom' && (
-                          <div className="mt-2 pl-6">
+                          <div className="mt-2 pl-6 relative">
+                            <span className="absolute left-9 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-medium">Rp</span>
                             <Input 
-                              type="number" 
-                              placeholder="Masukkan nominal bayar (Rp)"
-                              value={customPayment}
-                              onChange={(e) => setCustomPayment(e.target.value)}
-                              className="h-9 text-xs bg-white border-slate-300"
+                              className="h-9 text-xs bg-white border-slate-300 pl-8 font-bold text-blue-800"
+                              placeholder="0"
+                              value={customPayment ? customPayment.toLocaleString('id-ID') : ''}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/[^0-9]/g, '');
+                                setCustomPayment(val ? parseInt(val, 10) : '');
+                              }}
                             />
                           </div>
                         )}
