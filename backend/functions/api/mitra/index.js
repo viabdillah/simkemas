@@ -25,7 +25,8 @@ export async function onRequestGet(context) {
           'nib', k.nib,
           'pirt', k.pirt,
           'halal', k.halal,
-          'catatan', k.catatan
+          'catatan', k.catatan,
+          'harga', k.harga
         )) as products
       FROM mitra m
       LEFT JOIN katalog_mitra k ON m.id = k.mitra_id
@@ -41,7 +42,6 @@ export async function onRequestGet(context) {
         console.error("Gagal parse JSON:", e);
       }
       
-      // Deteksi aman jika mitra belum punya produk sama sekali
       const hasProducts = Array.isArray(parsedProducts) && parsedProducts.length > 0 && parsedProducts[0].id !== null;
 
       return {
@@ -55,7 +55,6 @@ export async function onRequestGet(context) {
     });
   } catch (error) {
     console.error("GET /api/mitra Error:", error);
-    // KITA KIRIM ERROR ASLINYA KE FRONTEND BIAR KETAHUAN!
     return new Response(JSON.stringify(formatResponse(false, null, "DB Error: " + error.message)), { 
       status: 500, headers: { 'Content-Type': 'application/json' } 
     });
@@ -89,15 +88,15 @@ export async function onRequestPost(context) {
     }
 
     const stmtTemplate = db.prepare(`
-      INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, label, jenis_kemasan, ukuran, nib, pirt, halal, catatan)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, label, jenis_kemasan, ukuran, nib, pirt, halal, catatan, harga)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const p of products) {
       statements.push(
         stmtTemplate.bind(
           crypto.randomUUID(), mitraId, p.nama_produk, p.merek || '', p.label || '', 
-          p.jenis_kemasan || '', p.ukuran || '', p.nib || '', p.pirt || '', p.halal || '', p.catatan || ''
+          p.jenis_kemasan || '', p.ukuran || '', p.nib || '', p.pirt || '', p.halal || '', p.catatan || '', p.harga || 0
         )
       );
     }

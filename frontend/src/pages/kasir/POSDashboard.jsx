@@ -36,8 +36,9 @@ export default function POSDashboard() {
   const [discount, setDiscount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 🚀 STATE ITEM DISINKRONKAN DENGAN DATA MITRA
   const [items, setItems] = useState([
-    { id: generateId(), nama: '', merek: '', label: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, catatan: '', qty: 1, harga: 0 }
+    { id: generateId(), nama: '', merek: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, harga: 0, qty: 1, catatan: '' }
   ]);
 
   const getMinDate = () => {
@@ -76,7 +77,6 @@ export default function POSDashboard() {
     }
   };
 
-  // 🚀 KARENA BACKEND (OPSI B) SUDAH MENGELOMPOKKAN DATA, KITA TINGGAL FILTER SAJA
   const filteredGroups = mitraList.filter(m => {
     const matchName = m.nama_mitra?.toLowerCase().includes(searchMitraQuery.toLowerCase());
     const matchProduct = m.products && m.products.some(p => 
@@ -105,23 +105,23 @@ export default function POSDashboard() {
     setUmkm(selectedMitraGroup.nama_mitra);
     setPhone(selectedMitraGroup.phone);
 
-    const newItems = productsToAdd.map(mitra => ({
+    // 🚀 MAPPING SINKRONISASI DATA MITRA KE FORM KASIR (Termasuk Harga)
+    const newItems = productsToAdd.map(p => ({
       id: generateId(),
-      nama: mitra.nama_produk || '',
-      merek: mitra.merek || '',
-      label: mitra.label || '',
-      jenis: mitra.jenis_kemasan || '',
+      nama: p.nama_produk || '',
+      merek: p.merek || '',
+      jenis: p.jenis_kemasan || '',
       legalitas: {
-        nib: !!mitra.nib, nibNo: mitra.nib || '',
-        pirt: !!mitra.pirt, pirtNo: mitra.pirt || '',
-        halal: !!mitra.halal, halalNo: mitra.halal || ''
+        nib: !!p.nib, nibNo: p.nib || '',
+        pirt: !!p.pirt, pirtNo: p.pirt || '',
+        halal: !!p.halal, halalNo: p.halal || ''
       },
-      catatan: mitra.catatan || '',
+      harga: p.harga || 0,
       qty: 1,
-      harga: 0
+      catatan: p.catatan || ''
     }));
 
-    if (items.length === 1 && !items[0].nama && !items[0].merek) {
+    if (items.length === 1 && !items[0].nama && !items[0].merek && !items[0].jenis) {
       setItems([...newItems]);
     } else {
       setItems([...items, ...newItems]);
@@ -133,7 +133,7 @@ export default function POSDashboard() {
 
   // --- HANDLER ITEMS ---
   const addItem = () => {
-    setItems([...items, { id: generateId(), nama: '', merek: '', label: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, catatan: '', qty: 1, harga: 0 }]);
+    setItems([...items, { id: generateId(), nama: '', merek: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, harga: 0, qty: 1, catatan: '' }]);
   };
   
   const removeItem = (idToRemove) => {
@@ -158,7 +158,9 @@ export default function POSDashboard() {
 
   const handleSubmit = async () => {
     if (!umkm || !phone || !deadline) return toast.warning("Mohon lengkapi Data Pelanggan & Deadline");
-    const invalidItems = items.some(i => !i.nama || !i.merek || !i.label || !i.jenis || i.qty <= 0);
+    
+    // 🚀 VALIDASI FORM JUGA DISEDERHANAKAN (Tanpa Label)
+    const invalidItems = items.some(i => !i.nama || !i.merek || !i.jenis || i.qty <= 0);
     if (invalidItems) return toast.warning("Mohon lengkapi detail seluruh kemasan (Nama, Merek, Jenis, Qty)");
 
     setIsSubmitting(true);
@@ -170,7 +172,7 @@ export default function POSDashboard() {
       if (res.ok && result.ok) {
         toast.success(`Berhasil! Nomor Invoice: ${result.data.invoiceNo}`);
         setUmkm(''); setPhone(''); setDeadline(''); setPaymentType('full'); setDpAmount(0); setDiscount(0);
-        setItems([{ id: generateId(), nama: '', merek: '', label: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, catatan: '', qty: 1, harga: 0 }]);
+        setItems([{ id: generateId(), nama: '', merek: '', jenis: '', legalitas: { nib: false, nibNo: '', pirt: false, pirtNo: '', halal: false, halalNo: '' }, harga: 0, qty: 1, catatan: '' }]);
         window.open(`/kasir/invoice/${result.data.invoiceNo}`, '_blank');
       } else {
         toast.error("Gagal memproses pesanan", { description: result.error });
@@ -327,10 +329,34 @@ export default function POSDashboard() {
             <Card key={item.id} className="border-l-4 border-l-primary bg-white border-slate-200 shadow-sm relative">
               <Button variant="ghost" size="icon" className="absolute top-3 right-3 text-red-500 cursor-pointer" onClick={() => removeItem(item.id)}><Trash2 size={18} /></Button>
               <CardContent className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1"><label className="text-xs font-semibold">Nama Kemasan *</label><Input value={item.nama} onChange={(e) => updateItem(item.id, 'nama', e.target.value.toUpperCase())} /></div>
+                
+                {/* BARIS 1 */}
+                <div className="space-y-1"><label className="text-xs font-semibold">Nama Produk *</label><Input value={item.nama} onChange={(e) => updateItem(item.id, 'nama', e.target.value.toUpperCase())} /></div>
                 <div className="space-y-1"><label className="text-xs font-semibold">Merek *</label><Input value={item.merek} onChange={(e) => updateItem(item.id, 'merek', e.target.value.toUpperCase())} /></div>
-                <div className="space-y-1"><label className="text-xs font-semibold">Label *</label><Input value={item.label} onChange={(e) => updateItem(item.id, 'label', e.target.value.toUpperCase())} /></div>
-                <div className="space-y-1"><label className="text-xs font-semibold">Jenis *</label><Input value={item.jenis} onChange={(e) => updateItem(item.id, 'jenis', e.target.value.toUpperCase())} /></div>
+                
+                {/* BARIS 2 */}
+                <div className="space-y-1"><label className="text-xs font-semibold">Jenis Kemasan *</label><Input value={item.jenis} onChange={(e) => updateItem(item.id, 'jenis', e.target.value.toUpperCase())} /></div>
+                <div className="space-y-1"><label className="text-xs font-semibold">Quantity (Jumlah) *</label><Input type="number" min="1" value={item.qty} onChange={(e) => updateItem(item.id, 'qty', parseInt(e.target.value) || 0)} /></div>
+                
+                {/* BARIS 3 (DENGAN FORMATTER RP) */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-emerald-700">Harga Satuan (Rp) *</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">Rp</span>
+                    <Input 
+                      className="pl-9 font-semibold text-emerald-700" 
+                      placeholder="0" 
+                      value={item.harga ? item.harga.toLocaleString('id-ID') : ''} 
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        updateItem(item.id, 'harga', val ? parseInt(val, 10) : 0);
+                      }} 
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1"><label className="text-xs font-semibold">Catatan Tambahan</label><Input value={item.catatan} onChange={(e) => updateItem(item.id, 'catatan', e.target.value)} /></div>
+
+                {/* BARIS 4 LEGALITAS */}
                 <div className="sm:col-span-2 p-4 bg-slate-50 border rounded-xl space-y-3">
                   <span className="text-xs font-bold block">Legalitas (Centang)</span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -344,9 +370,7 @@ export default function POSDashboard() {
                     ))}
                   </div>
                 </div>
-                <div className="sm:col-span-2 space-y-1"><label className="text-xs font-semibold">Catatan</label><Input value={item.catatan} onChange={(e) => updateItem(item.id, 'catatan', e.target.value)} /></div>
-                <div className="space-y-1"><label className="text-xs font-semibold">Quantity (Pcs) *</label><Input type="number" min="1" value={item.qty} onChange={(e) => updateItem(item.id, 'qty', parseInt(e.target.value) || 0)} /></div>
-                <div className="space-y-1"><label className="text-xs font-semibold">Harga Satuan (Rp) *</label><Input type="number" min="0" value={item.harga} onChange={(e) => updateItem(item.id, 'harga', parseInt(e.target.value) || 0)} /></div>
+
               </CardContent>
             </Card>
           ))}
@@ -359,7 +383,10 @@ export default function POSDashboard() {
             <CardContent className="pt-6 flex-1 flex flex-col gap-6">
               <div className="space-y-3 bg-slate-50 p-4 border rounded-xl">
                 <div className="flex justify-between text-sm"><span>Sub Total</span><span className="font-semibold">Rp {subTotal.toLocaleString('id-ID')}</span></div>
-                <div className="flex justify-between items-center text-sm"><span>Diskon (Rp)</span><Input type="number" className="w-28 text-right font-semibold bg-white" value={discount} onChange={(e) => setDiscount(parseInt(e.target.value) || 0)} /></div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Diskon (Rp)</span>
+                  <Input type="number" className="w-28 text-right font-semibold bg-white" value={discount} onChange={(e) => setDiscount(parseInt(e.target.value) || 0)} />
+                </div>
                 <div className="flex justify-between text-lg font-bold border-t pt-3 text-emerald-600"><span>GRAND TOTAL</span><span>Rp {grandTotal.toLocaleString('id-ID')}</span></div>
               </div>
               <div className="space-y-2">
@@ -373,7 +400,17 @@ export default function POSDashboard() {
               {paymentType === 'dp' && (
                 <div className="p-3 bg-amber-50 border-amber-200 border rounded-lg space-y-1">
                   <label className="text-xs font-bold text-amber-800">Nominal DP *</label>
-                  <Input type="number" className="bg-white" value={dpAmount} onChange={(e) => setDpAmount(parseInt(e.target.value)||0)} />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">Rp</span>
+                    <Input 
+                      className="pl-9 bg-white" 
+                      value={dpAmount ? dpAmount.toLocaleString('id-ID') : ''} 
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        setDpAmount(val ? parseInt(val, 10) : 0);
+                      }} 
+                    />
+                  </div>
                   <span className="text-[10px] text-amber-700">Sisa: Rp {Math.max(0, grandTotal - dpAmount).toLocaleString('id-ID')}</span>
                 </div>
               )}
