@@ -2,63 +2,67 @@ import { formatResponse } from '@simkemas/shared';
 import { requireRole } from '../../_lib/rbac';
 import { insertAuditLog } from '../../_lib/audit';
 
+// 1. MENGAMBIL DATA (GET) - KEBAL PELURU 🛡️
 export async function onRequestGet(context) {
   const roleCheck = requireRole(context.data.user, ['Super Administrasi', 'Kasir', 'Manajer']);
   if (roleCheck) return roleCheck;
 
   try {
     const db = context.env.DB;
-    
-    // 🚀 SQL MAGIC: LEFT JOIN antara tabel mitra dan katalog_mitra
     const { results } = await db.prepare(`
       SELECT 
         m.id as mitra_id,
-        m.nama_mitra, 
-        m.phone, 
-        MIN(m.created_at) as joined_date,
-        json_group_array(
-          CASE WHEN km.id IS NOT NULL THEN json_object(
-            'id', km.id,
-            'nama_produk', km.nama_produk,
-            'merek', km.merek,
-            'label', km.label,
-            'jenis_kemasan', km.jenis_kemasan,
-            'ukuran', km.ukuran,
-            'nib', km.nib,
-            'pirt', km.pirt,
-            'halal', km.halal,
-            'catatan', km.catatan
-          ) ELSE NULL END
-        ) as products
+        m.nama_mitra,
+        m.phone,
+        m.created_at as joined_date,
+        json_group_array(json_object(
+          'id', k.id,
+          'nama_produk', k.nama_produk,
+          'merek', k.merek,
+          'label', k.label,
+          'jenis_kemasan', k.jenis_kemasan,
+          'ukuran', k.ukuran,
+          'nib', k.nib,
+          'pirt', k.pirt,
+          'halal', k.halal,
+          'catatan', k.catatan
+        )) as products
       FROM mitra m
-      LEFT JOIN katalog_mitra km ON m.id = km.mitra_id
-      GROUP BY m.id, m.phone, m.nama_mitra
-      ORDER BY joined_date DESC
+      LEFT JOIN katalog_mitra k ON m.id = k.mitra_id
+      GROUP BY m.id, m.nama_mitra, m.phone
+      ORDER BY m.created_at DESC
     `).all();
 
-    // Parsing aman: Filter hasil array jika mitra belum punya produk (null)
     const groupedResults = results.map(row => {
-      let parsedProducts = JSON.parse(row.products);
-      parsedProducts = parsedProducts.filter(p => p !== null);
+      let parsedProducts = [];
+      try {
+        parsedProducts = JSON.parse(row.products);
+      } catch(e) {
+        console.error("Gagal parse JSON:", e);
+      }
       
+      // Deteksi aman jika mitra belum punya produk sama sekali
+      const hasProducts = Array.isArray(parsedProducts) && parsedProducts.length > 0 && parsedProducts[0].id !== null;
+
       return {
         ...row,
-        products: parsedProducts
+        products: hasProducts ? parsedProducts : []
       };
     });
 
     return new Response(JSON.stringify(formatResponse(true, groupedResults)), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      status: 200, headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
     console.error("GET /api/mitra Error:", error);
-    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { 
+    // KITA KIRIM ERROR ASLINYA KE FRONTEND BIAR KETAHUAN!
+    return new Response(JSON.stringify(formatResponse(false, null, "DB Error: " + error.message)), { 
       status: 500, headers: { 'Content-Type': 'application/json' } 
     });
   }
 }
 
+// 2. MENYIMPAN DATA (POST) KE 2 TABEL
 export async function onRequestPost(context) {
   const roleCheck = requireRole(context.data.user, ['Super Administrasi', 'Kasir']);
   if (roleCheck) return roleCheck;
@@ -66,56 +70,34 @@ export async function onRequestPost(context) {
   try {
     const body = await context.request.json();
     const { nama_mitra, phone, products } = body;
-
-    // 1. Validasi
-    if (!nama_mitra || !phone) {
-      return new Response(JSON.stringify(formatResponse(false, null, "Nama Mitra dan No Telp/WA wajib diisi")), { status: 400 });
-    }
-    if (!Array.isArray(products) || products.length === 0) {
-      return new Response(JSON.stringify(formatResponse(false, null, "Minimal harus ada 1 produk yang didaftarkan")), { status: 400 });
-    }
-    for (let i = 0; i < products.length; i++) {
-      if (!products[i].nama_produk) {
-        return new Response(JSON.stringify(formatResponse(false, null, `Nama produk pada item ke-${i + 1} wajib diisi`)), { status: 400 });
-      }
-    }
-
-    const db = context.env.DB;
     const currentUserId = context.data.user.sub;
-    
-    // 2. Cek & Insert Mitra (Upsert Logic)
+    const db = context.env.DB;
+
+    if (!nama_mitra || !phone || !products || products.length === 0) {
+      return new Response(JSON.stringify(formatResponse(false, null, "Data mitra atau produk tidak lengkap")), { status: 400 });
+    }
+
+    const statements = [];
     let mitra = await db.prepare("SELECT id FROM mitra WHERE phone = ?").bind(phone).first();
-    let mitra_id;
+    let mitraId;
 
     if (!mitra) {
-      mitra_id = crypto.randomUUID();
-      await db.prepare("INSERT INTO mitra (id, nama_mitra, phone) VALUES (?, ?, ?)").bind(mitra_id, nama_mitra, phone).run();
+      mitraId = crypto.randomUUID();
+      statements.push(db.prepare("INSERT INTO mitra (id, nama_mitra, phone) VALUES (?, ?, ?)").bind(mitraId, nama_mitra, phone));
     } else {
-      mitra_id = mitra.id;
-      // Memastikan nama mitra di database sinkron jika user input nama berbeda untuk nomor HP yang sama
-      await db.prepare("UPDATE mitra SET nama_mitra = ? WHERE id = ?").bind(nama_mitra, mitra_id).run();
+      mitraId = mitra.id;
     }
 
-    // 3. Insert Produk
-    const statements = [];
-    const stmtTemplate = db.prepare(
-      "INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, label, jenis_kemasan, ukuran, nib, pirt, halal, catatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    );
+    const stmtTemplate = db.prepare(`
+      INSERT INTO katalog_mitra (id, mitra_id, nama_produk, merek, label, jenis_kemasan, ukuran, nib, pirt, halal, catatan)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
 
     for (const p of products) {
       statements.push(
         stmtTemplate.bind(
-          crypto.randomUUID(),
-          mitra_id, 
-          p.nama_produk, 
-          p.merek || '', 
-          p.label || '', 
-          p.jenis_kemasan || '', 
-          p.ukuran || '', 
-          p.nib || '', 
-          p.pirt || '', 
-          p.halal || '', 
-          p.catatan || ''
+          crypto.randomUUID(), mitraId, p.nama_produk, p.merek || '', p.label || '', 
+          p.jenis_kemasan || '', p.ukuran || '', p.nib || '', p.pirt || '', p.halal || '', p.catatan || ''
         )
       );
     }
@@ -123,14 +105,14 @@ export async function onRequestPost(context) {
     await db.batch(statements);
 
     const ip = context.request.headers.get('CF-Connecting-IP') || 'Local';
-    await insertAuditLog(db, currentUserId, 'CREATE_MITRA', `Mendaftarkan ${products.length} produk untuk Mitra ${nama_mitra}`, ip);
+    await insertAuditLog(db, currentUserId, 'CREATE_MITRA', `Mendaftarkan produk untuk Mitra ${nama_mitra}`, ip);
 
-    return new Response(JSON.stringify(formatResponse(true, { message: `${products.length} produk berhasil didaftarkan untuk Mitra ${nama_mitra}` })), {
-      status: 201
-    });
-
+    return new Response(JSON.stringify(formatResponse(true, { message: `Produk berhasil ditambahkan ke katalog ${nama_mitra}` })), { status: 201 });
   } catch (error) {
+    if (error.message.includes("UNIQUE constraint failed")) {
+      return new Response(JSON.stringify(formatResponse(false, null, "Nomor WhatsApp sudah digunakan oleh mitra lain")), { status: 400 });
+    }
     console.error("POST /api/mitra Error:", error);
-    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server")), { status: 500 });
+    return new Response(JSON.stringify(formatResponse(false, null, "Terjadi kesalahan server saat menyimpan data")), { status: 500 });
   }
 }
